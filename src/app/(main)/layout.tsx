@@ -1,3 +1,4 @@
+
 import { AppSidebar } from '@/components/app-sidebar';
 import { getProjects } from '@/lib/api';
 import { SidebarProvider } from '@/components/ui/sidebar';
