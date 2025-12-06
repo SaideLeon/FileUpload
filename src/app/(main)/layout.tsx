@@ -2,6 +2,7 @@
 import { AppSidebar } from '@/components/app-sidebar';
 import { getProjects } from '@/lib/api';
 import { SidebarProvider } from '@/components/ui/sidebar';
+import { AppHeader } from '@/components/app-header';
 
 export default async function MainLayout({
   children,
@@ -14,6 +15,7 @@ export default async function MainLayout({
     <SidebarProvider>
       <AppSidebar projects={projects} />
       <div className="md:pe-2 min-h-svh flex flex-col w-full">
+        <AppHeader allProjects={projects} />
         {children}
       </div>
     </SidebarProvider>

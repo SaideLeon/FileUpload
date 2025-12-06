@@ -36,7 +36,9 @@ export function FilesTable({ files, projectName, showProjectColumn = false }: Fi
     );
   }
 
-  const isViewable = (type: ProjectFile['type']) => ['image', 'video', 'document'].includes(type);
+  const isFileViewable = (type: ProjectFile['type']) => {
+    return ['image', 'video', 'document'].includes(type);
+  };
 
   return (
     <Card>
@@ -56,35 +58,38 @@ export function FilesTable({ files, projectName, showProjectColumn = false }: Fi
             </TableRow>
           </TableHeader>
           <TableBody>
-            {files.map((file) => (
-              <TableRow key={file.id}>
-                <TableCell className="hidden sm:table-cell">
-                  <FileIcon type={file.type} />
-                </TableCell>
-                <TableCell className="font-medium">
-                  <div className="flex items-center gap-2">
-                    <FileIcon type={file.type} className="sm:hidden" />
-                    {isViewable(file.type) ? (
-                      <FileViewerDialog file={file}>
-                        <span className="truncate max-w-xs cursor-pointer hover:underline">{file.name}</span>
-                      </FileViewerDialog>
-                    ) : (
-                      <a href={file.url} target="_blank" rel="noopener noreferrer" className="truncate max-w-xs hover:underline">
-                        {file.name}
-                      </a>
-                    )}
-                  </div>
-                </TableCell>
-                {showProjectColumn && <TableCell className="hidden md:table-cell">{file.projectName}</TableCell>}
-                <TableCell className="hidden md:table-cell">{formatBytes(file.size)}</TableCell>
-                <TableCell className="hidden lg:table-cell">
-                  {formatDistanceToNow(new Date(file.uploadedAt), { addSuffix: true })}
-                </TableCell>
-                <TableCell className="text-right">
-                  <DeleteFileButton projectName={file.projectName || projectName || ''} fileName={file.name} />
-                </TableCell>
-              </TableRow>
-            ))}
+            {files.map((file) => {
+              const viewable = isFileViewable(file.type);
+              return (
+                <TableRow key={file.id}>
+                  <TableCell className="hidden sm:table-cell">
+                    <FileIcon type={file.type} />
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    <div className="flex items-center gap-2">
+                      <FileIcon type={file.type} className="sm:hidden" />
+                      {viewable ? (
+                        <FileViewerDialog file={file}>
+                          <span className="truncate max-w-xs cursor-pointer hover:underline">{file.name}</span>
+                        </FileViewerDialog>
+                      ) : (
+                        <a href={file.url} target="_blank" rel="noopener noreferrer" className="truncate max-w-xs hover:underline">
+                          {file.name}
+                        </a>
+                      )}
+                    </div>
+                  </TableCell>
+                  {showProjectColumn && <TableCell className="hidden md:table-cell">{file.projectName}</TableCell>}
+                  <TableCell className="hidden md:table-cell">{formatBytes(file.size)}</TableCell>
+                  <TableCell className="hidden lg:table-cell">
+                    {formatDistanceToNow(new Date(file.uploadedAt), { addSuffix: true })}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DeleteFileButton projectName={file.projectName || projectName || ''} fileName={file.name} />
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </CardContent>
