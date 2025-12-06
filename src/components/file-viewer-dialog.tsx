@@ -7,9 +7,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import Image from 'next/image';
 import type { ProjectFile } from '@/lib/types';
 import { ScrollArea } from './ui/scroll-area';
+import { useState } from 'react';
+import { Loader2 } from 'lucide-react';
 
 interface FileViewerDialogProps {
   file: ProjectFile;
@@ -18,40 +19,82 @@ interface FileViewerDialogProps {
 
 export function FileViewerDialog({ file, children }: FileViewerDialogProps) {
   const { name, url, type } = file;
+  const [imageLoading, setImageLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
 
   const renderContent = () => {
     switch (type) {
       case 'image':
         return (
-            <Image
-              src={url}
-              alt={name}
-              width={800}
-              height={600}
-              unoptimized
-              className="object-contain w-full h-auto"
-            />
+          <div className="relative w-full min-h-[400px] flex items-center justify-center bg-slate-900/5">
+            {imageLoading && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            )}
+            {imageError ? (
+              <div className="p-8 text-center text-muted-foreground">
+                <p className="mb-4">Não foi possível carregar a imagem.</p>
+                <a 
+                  href={url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-primary hover:underline"
+                >
+                  Abrir em nova aba
+                </a>
+              </div>
+            ) : (
+              <img
+                src={url}
+                alt={name}
+                className="max-w-full max-h-[80vh] object-contain"
+                onLoad={() => setImageLoading(false)}
+                onError={() => {
+                  setImageLoading(false);
+                  setImageError(true);
+                }}
+              />
+            )}
+          </div>
         );
+      
       case 'video':
         return (
-          <div className="aspect-video">
+          <div className="aspect-video bg-black">
             <video controls src={url} className="w-full h-full">
               Seu navegador não suporta a tag de vídeo.
             </video>
           </div>
         );
+      
       case 'document':
         return (
-            <iframe src={url} className="w-full h-[80vh]" title={name} />
+          <div className="w-full h-[80vh]">
+            <iframe 
+              src={url} 
+              className="w-full h-full border-0" 
+              title={name}
+              onError={() => {
+                console.error('Erro ao carregar documento');
+              }}
+            />
+          </div>
         );
+      
       default:
         return (
-            <div className="p-8 text-center text-muted-foreground">
-                <p>A pré-visualização para este tipo de arquivo não é suportada.</p>
-                <a href={url} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block text-primary hover:underline">
-                    Abrir em nova aba
-                </a>
-            </div>
+          <div className="p-8 text-center text-muted-foreground">
+            <p>A pré-visualização para este tipo de arquivo não é suportada.</p>
+            <a 
+              href={url} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="mt-4 inline-block text-primary hover:underline"
+            >
+              Abrir em nova aba
+            </a>
+          </div>
         );
     }
   };
@@ -59,12 +102,14 @@ export function FileViewerDialog({ file, children }: FileViewerDialogProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="max-w-4xl p-0">
-        <DialogHeader className="p-4 border-b">
-          <DialogTitle className="truncate">{name}</DialogTitle>
+      <DialogContent className="max-w-4xl max-h-[95vh] p-0 overflow-hidden">
+        <DialogHeader className="p-4 pb-3 border-b">
+          <DialogTitle className="truncate pr-8">{name}</DialogTitle>
         </DialogHeader>
-        <ScrollArea className="max-h-[90vh] overflow-y-auto p-4">
-          {renderContent()}
+        <ScrollArea className="max-h-[calc(95vh-80px)]">
+          <div className="p-4">
+            {renderContent()}
+          </div>
         </ScrollArea>
       </DialogContent>
     </Dialog>
