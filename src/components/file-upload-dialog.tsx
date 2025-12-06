@@ -14,54 +14,94 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Upload } from 'lucide-react';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
-import { useActionState } from 'react';
-import { uploadFileAction } from '@/lib/actions';
 
-const initialState = {
-  success: '',
-  error: '',
-  url: '',
-  fileName: ''
-};
+// Obter a URL da API
+const API_URL = typeof window !== 'undefined' 
+  ? (window as any).__API_URL__ || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://uploader.nativespeak.app'
+  : process.env.NEXT_PUBLIC_API_BASE_URL || 'https://uploader.nativespeak.app';
 
 export function FileUploadDialog({ projectName }: { projectName: string }) {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
   const router = useRouter();
-  const formRef = useRef<HTMLFormElement>(null);
-
-  const [state, formAction, isPending] = useActionState(uploadFileAction, initialState);
-
-  useEffect(() => {
-    if (state.success) {
-      toast({
-        title: 'Sucesso',
-        description: state.success,
-      });
-      
-      setFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-      setOpen(false);
-      
-      router.refresh();
-    } else if (state.error) {
-      toast({
-        variant: 'destructive',
-        title: 'Erro',
-        description: state.error,
-      });
-    }
-  }, [state, toast, router]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
+    }
+  };
+  
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    if (!file) {
+      toast({ 
+        variant: 'destructive', 
+        title: 'Erro', 
+        description: 'Por favor selecione um arquivo para upload.' 
+      });
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('project', projectName);
+      
+      const uploadUrl = `${API_URL}/upload`;
+      console.log('Uploading to:', uploadUrl);
+
+      const response = await fetch(uploadUrl, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        let errorMessage = `Upload failed with status: ${response.status}`;
+        try {
+          const errorJson = await response.json();
+          errorMessage = errorJson.error || errorMessage;
+        } catch (e) {
+          // Se não conseguir parsear JSON, usa a mensagem padrão
+        }
+        throw new Error(errorMessage);
+      }
+
+      const result = await response.json();
+      
+      toast({ 
+        title: 'Sucesso', 
+        description: `Arquivo "${file.name}" enviado com sucesso.` 
+      });
+      
+      // Resetar e fechar
+      setFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      setOpen(false);
+      
+      // Recarregar a página para mostrar o novo arquivo
+      router.refresh();
+
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Erro desconhecido ao fazer upload.';
+      console.error('Upload error:', error);
+      
+      toast({ 
+        variant: 'destructive', 
+        title: 'Erro no Upload', 
+        description: message 
+      });
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -71,7 +111,6 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
         if (!isOpen) {
             setFile(null);
             if (fileInputRef.current) fileInputRef.current.value = '';
-            if (formRef.current) formRef.current.reset();
         }
     }}>
       <DialogTrigger asChild>
@@ -81,7 +120,7 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <form ref={formRef} action={formAction}>
+        <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Upload File</DialogTitle>
             <DialogDescription>
@@ -89,8 +128,6 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <input type="hidden" name="projectName" value={projectName} />
-            
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <Label htmlFor="file">File</Label>
               <Input 
@@ -100,7 +137,7 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
                 required 
                 onChange={handleFileChange} 
                 ref={fileInputRef}
-                disabled={isPending}
+                disabled={uploading}
               />
               {file && (
                 <p className="text-xs text-muted-foreground">
@@ -111,12 +148,12 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="button" variant="secondary" disabled={isPending}>
+              <Button type="button" variant="secondary" disabled={uploading}>
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={isPending || !file}>
-              {isPending ? 'Uploading...' : 'Upload'}
+            <Button type="submit" disabled={uploading || !file}>
+              {uploading ? 'Uploading...' : 'Upload'}
             </Button>
           </DialogFooter>
         </form>
