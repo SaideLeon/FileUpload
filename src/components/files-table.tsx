@@ -70,7 +70,9 @@ export function FilesTable({ files, projectName, showProjectColumn = false }: Fi
                       <FileIcon type={file.type} className="sm:hidden" />
                       {viewable ? (
                         <FileViewerDialog file={file}>
-                          <span className="truncate max-w-xs cursor-pointer hover:underline">{file.name}</span>
+                          <span className="truncate max-w-xs cursor-pointer hover:underline text-primary">
+                            {file.name}
+                          </span>
                         </FileViewerDialog>
                       ) : (
                         <a href={file.url} target="_blank" rel="noopener noreferrer" className="truncate max-w-xs hover:underline">
