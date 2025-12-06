@@ -37,29 +37,27 @@ export function AppSidebar({ projects }: AppSidebarProps) {
         <SidebarMenu>
           {projects.map((project) => (
             <SidebarMenuItem key={project.id}>
-              <Link href={`/${project.name}`} legacyBehavior passHref>
-                <SidebarMenuButton
-                  asChild
-                  isActive={currentProjectName === project.name}
-                  tooltip={{
-                    children: (
-                      <>
-                        <p className="font-semibold">{project.name}</p>
-                        <p className="text-muted-foreground text-xs">
-                          {project.fileCount} files, {formatBytes(project.totalSize)}
-                        </p>
-                      </>
-                    ),
-                    className: 'w-48',
-                  }}
-                >
-                  <a>
-                    <FolderGit2 />
-                    <span>{project.name}</span>
-                    <Badge variant="secondary" className="ml-auto group-data-[collapsible=icon]:hidden">{project.fileCount}</Badge>
-                  </a>
-                </SidebarMenuButton>
-              </Link>
+              <SidebarMenuButton
+                asChild
+                isActive={currentProjectName === project.name}
+                tooltip={{
+                  children: (
+                    <>
+                      <p className="font-semibold">{project.name}</p>
+                      <p className="text-muted-foreground text-xs">
+                        {project.fileCount} files, {formatBytes(project.totalSize)}
+                      </p>
+                    </>
+                  ),
+                  className: 'w-48',
+                }}
+              >
+                <Link href={`/${project.name}`}>
+                  <FolderGit2 />
+                  <span>{project.name}</span>
+                  <Badge variant="secondary" className="ml-auto group-data-[collapsible=icon]:hidden">{project.fileCount}</Badge>
+                </Link>
+              </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
