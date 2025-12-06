@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function ProjectPage({ params }: { params: { projectName: string } }) {
-  const { projectName } = params;
+  const { projectName } = await params;
   
   const [project, files, allProjects] = await Promise.all([
     getProjectByName(projectName),
