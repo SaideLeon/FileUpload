@@ -1,3 +1,4 @@
+
 import type { ProjectFile } from '@/lib/types';
 import {
   Table,
@@ -13,6 +14,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { FileIcon } from './file-icon';
 import { DeleteFileButton } from './delete-file-button';
 import { FileViewerDialog } from './file-viewer-dialog';
+import { Button } from '@/components/ui/button';
 
 interface FilesTableProps {
   files: (ProjectFile & {projectName?: string})[];
@@ -67,15 +69,23 @@ export function FilesTable({ files, projectName, showProjectColumn = false }: Fi
                   </TableCell>
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-2">
-                      <FileIcon type={file.type} className="sm:hidden" />
+                      <FileIcon type={file.type} className="sm:hidden flex-shrink-0" />
                       {viewable ? (
                         <FileViewerDialog file={file}>
-                          <span className="truncate max-w-xs cursor-pointer hover:underline text-primary">
+                          <Button
+                            variant="link"
+                            className="h-auto p-0 text-left font-medium text-primary hover:underline truncate max-w-xs"
+                          >
                             {file.name}
-                          </span>
+                          </Button>
                         </FileViewerDialog>
                       ) : (
-                        <a href={file.url} target="_blank" rel="noopener noreferrer" className="truncate max-w-xs hover:underline">
+                        <a 
+                          href={file.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="truncate max-w-xs hover:underline text-primary"
+                        >
                           {file.name}
                         </a>
                       )}
