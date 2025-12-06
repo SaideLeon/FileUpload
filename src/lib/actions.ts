@@ -8,7 +8,6 @@ if (!API_URL) {
   throw new Error('Missing API_BASE_URL environment variable');
 }
 
-
 export async function deleteFileAction(prevState: any, formData: FormData) {
   const projectName = formData.get('projectName') as string;
   const fileName = formData.get('fileName') as string;

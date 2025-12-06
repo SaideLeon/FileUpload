@@ -15,37 +15,42 @@ import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
 import { deleteFileAction } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
-import {useTransition} from 'react';
+import { useActionState, useEffect } from 'react';
 
 interface DeleteFileButtonProps {
   projectName: string;
   fileName: string;
 }
 
+const initialState = {
+  success: '',
+  error: '',
+};
+
 export function DeleteFileButton({ projectName, fileName }: DeleteFileButtonProps) {
   const { toast } = useToast();
-  const [isPending, startTransition] = useTransition();
+  const [state, formAction, isPending] = useActionState(deleteFileAction, initialState);
 
-  const handleDelete = async () => {
+  useEffect(() => {
+    if (state.success) {
+      toast({
+        title: 'Success',
+        description: state.success,
+      });
+    } else if (state.error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: state.error,
+      });
+    }
+  }, [state, toast]);
+
+  const handleDelete = () => {
     const formData = new FormData();
     formData.append('projectName', projectName);
     formData.append('fileName', fileName);
-
-    startTransition(async () => {
-        const result = await deleteFileAction(formData);
-        if (result?.success) {
-            toast({
-                title: 'Success',
-                description: result.success,
-            });
-        } else if (result?.error) {
-            toast({
-                variant: 'destructive',
-                title: 'Error',
-                description: result.error,
-            });
-        }
-    });
+    formAction(formData);
   };
 
   return (
