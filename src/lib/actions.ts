@@ -44,24 +44,21 @@ export async function uploadFileAction(prevState: any, formData: FormData) {
     }
     
     const uploadUrl = `${API_URL}/upload`;
-    const uploadFormData = new FormData();
-    uploadFormData.append('file', file);
-    uploadFormData.append('project', projectName);
 
     try {
         const response = await fetch(uploadUrl, {
             method: 'POST',
-            body: uploadFormData,
+            body: formData, // Directly use the formData from the form
         });
 
         if (!response.ok) {
             let errorMessage = `Upload failed with status: ${response.status}`;
             try {
-                const errorText = await response.text();
-                const errorJson = JSON.parse(errorText);
+                // Try to parse a specific error message from the API response
+                const errorJson = await response.json();
                 errorMessage = errorJson.error || errorMessage;
             } catch (e) {
-                // If parsing fails, the original error message is used.
+                // If parsing fails, the original status message is a good fallback.
             }
             throw new Error(errorMessage);
         }
