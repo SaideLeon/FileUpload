@@ -38,30 +38,30 @@ export async function deleteFileAction(prevState: any, formData: FormData) {
 export async function uploadFileAction(prevState: any, formData: FormData) {
     const projectName = formData.get('projectName') as string;
     const file = formData.get('file') as File;
-    const uploadUrl = `${API_URL}/upload`;
 
     if (!projectName || !file || file.size === 0) {
         return { error: 'Project name and a valid file are required.' };
     }
     
-    try {
-        const uploadFormData = new FormData();
-        uploadFormData.append('file', file);
-        uploadFormData.append('project', projectName);
+    const uploadUrl = `${API_URL}/upload`;
+    const uploadFormData = new FormData();
+    uploadFormData.append('file', file);
+    uploadFormData.append('project', projectName);
 
+    try {
         const response = await fetch(uploadUrl, {
             method: 'POST',
             body: uploadFormData,
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
             let errorMessage = `Upload failed with status: ${response.status}`;
             try {
+                const errorText = await response.text();
                 const errorJson = JSON.parse(errorText);
                 errorMessage = errorJson.error || errorMessage;
             } catch (e) {
-                // ignore if parsing fails, use the status text
+                // If parsing fails, the original error message is used.
             }
             throw new Error(errorMessage);
         }
@@ -70,9 +70,7 @@ export async function uploadFileAction(prevState: any, formData: FormData) {
         revalidatePath('/');
         return { success: `File "${file.name}" uploaded successfully.` };
     } catch (error) {
-        if (error instanceof Error) {
-            return { error: `Failed to upload the file: ${error.message}` };
-        }
-        return { error: 'An unknown error occurred during file upload.' };
+        const message = error instanceof Error ? error.message : 'An unknown error occurred during file upload.';
+        return { error: message };
     }
 }
