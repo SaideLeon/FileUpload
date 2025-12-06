@@ -10,7 +10,8 @@ import {
 import type { ProjectFile } from '@/lib/types';
 import { ScrollArea } from './ui/scroll-area';
 import { useState } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ExternalLink } from 'lucide-react';
+import { Button } from './ui/button';
 
 interface FileViewerDialogProps {
   file: ProjectFile;
@@ -35,14 +36,16 @@ export function FileViewerDialog({ file, children }: FileViewerDialogProps) {
             {imageError ? (
               <div className="p-8 text-center text-muted-foreground">
                 <p className="mb-4">Não foi possível carregar a imagem.</p>
-                <a 
-                  href={url} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-primary hover:underline"
-                >
-                  Abrir em nova aba
-                </a>
+                <Button asChild variant="outline">
+                  <a 
+                    href={url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                    Abrir em nova aba
+                  </a>
+                </Button>
               </div>
             ) : (
               <img
@@ -86,14 +89,16 @@ export function FileViewerDialog({ file, children }: FileViewerDialogProps) {
         return (
           <div className="p-8 text-center text-muted-foreground">
             <p>A pré-visualização para este tipo de arquivo não é suportada.</p>
-            <a 
-              href={url} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="mt-4 inline-block text-primary hover:underline"
-            >
-              Abrir em nova aba
-            </a>
+            <Button asChild variant="outline" className="mt-4">
+              <a 
+                href={url} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+              >
+                <ExternalLink className="mr-2 h-4 w-4" />
+                Abrir em nova aba
+              </a>
+            </Button>
           </div>
         );
     }
