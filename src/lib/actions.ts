@@ -29,12 +29,31 @@ export async function deleteFileAction(formData: FormData) {
 export async function uploadFileAction(formData: FormData) {
     const projectName = formData.get('projectName') as string;
     const file = formData.get('file') as File;
+    const uploadUrl = 'https://uploader.nativespeak.app/upload';
 
     if (!projectName || !file || file.size === 0) {
         return { error: 'Project name and a valid file are required.' };
     }
     
     try {
+        const uploadFormData = new FormData();
+        uploadFormData.append('file', file);
+
+        const response = await fetch(uploadUrl, {
+            method: 'POST',
+            body: uploadFormData,
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Upload failed:', errorText);
+            throw new Error(`Upload failed with status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        const uploadedFileUrl = result.url;
+
+
         const projectFiles = mockFilesStore.get(projectName) || [];
         
         const fileTypeMap: Record<string, ProjectFile['type']> = {
@@ -50,7 +69,7 @@ export async function uploadFileAction(formData: FormData) {
         const newFile: ProjectFile = {
             id: faker.string.uuid(),
             name: file.name,
-            url: `/uploads/${projectName}/${file.name}`,
+            url: uploadedFileUrl,
             size: file.size,
             uploadedAt: new Date().toISOString(),
             type: fileTypeMap[primaryType] || fileTypeMap[secondaryType] || 'other',
@@ -61,6 +80,10 @@ export async function uploadFileAction(formData: FormData) {
         revalidatePath(`/${projectName}`);
         return { success: `File "${file.name}" uploaded successfully.` };
     } catch (error) {
-        return { error: 'Failed to upload the file.' };
+        console.error('Upload action error:', error);
+        if (error instanceof Error) {
+            return { error: `Failed to upload the file: ${error.message}` };
+        }
+        return { error: 'An unknown error occurred during file upload.' };
     }
 }
