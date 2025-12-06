@@ -12,7 +12,7 @@ export default async function MainLayout({
   return (
     <SidebarProvider>
       <AppSidebar projects={projects} />
-      <div className="md:pe-2 min-h-svh flex flex-col">
+      <div className="md:pe-2 min-h-svh flex flex-col w-full">
         {children}
       </div>
     </SidebarProvider>

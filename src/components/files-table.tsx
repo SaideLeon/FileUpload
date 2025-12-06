@@ -14,11 +14,12 @@ import { FileIcon } from './file-icon';
 import { DeleteFileButton } from './delete-file-button';
 
 interface FilesTableProps {
-  files: ProjectFile[];
-  projectName: string;
+  files: (ProjectFile & {projectName?: string})[];
+  projectName?: string;
+  showProjectColumn?: boolean;
 }
 
-export function FilesTable({ files, projectName }: FilesTableProps) {
+export function FilesTable({ files, projectName, showProjectColumn = false }: FilesTableProps) {
   if (files.length === 0) {
     return (
         <Card>
@@ -45,6 +46,7 @@ export function FilesTable({ files, projectName }: FilesTableProps) {
             <TableRow>
               <TableHead className="w-[80px] hidden sm:table-cell">Type</TableHead>
               <TableHead>Name</TableHead>
+              {showProjectColumn && <TableHead className="hidden md:table-cell">Project</TableHead>}
               <TableHead className="hidden md:table-cell">Size</TableHead>
               <TableHead className="hidden lg:table-cell">Uploaded</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -62,12 +64,13 @@ export function FilesTable({ files, projectName }: FilesTableProps) {
                         <span className="truncate max-w-xs">{file.name}</span>
                     </div>
                 </TableCell>
+                {showProjectColumn && <TableCell className="hidden md:table-cell">{file.projectName}</TableCell>}
                 <TableCell className="hidden md:table-cell">{formatBytes(file.size)}</TableCell>
                 <TableCell className="hidden lg:table-cell">
                   {formatDistanceToNow(new Date(file.uploadedAt), { addSuffix: true })}
                 </TableCell>
                 <TableCell className="text-right">
-                  <DeleteFileButton projectName={projectName} fileName={file.name} />
+                  <DeleteFileButton projectName={file.projectName || projectName || ''} fileName={file.name} />
                 </TableCell>
               </TableRow>
             ))}

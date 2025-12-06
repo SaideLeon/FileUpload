@@ -10,9 +10,9 @@ import {
   SidebarFooter
 } from '@/components/ui/sidebar';
 import type { ProjectWithDetails } from '@/lib/types';
-import { FolderGit2, Settings } from 'lucide-react';
+import { FolderGit2, Settings, Files } from 'lucide-react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { Logo } from './logo';
 import { formatBytes } from '@/lib/utils';
 import { Badge } from './ui/badge';
@@ -23,6 +23,7 @@ interface AppSidebarProps {
 
 export function AppSidebar({ projects }: AppSidebarProps) {
   const params = useParams();
+  const pathname = usePathname();
   const currentProjectName = params.projectName as string;
 
   return (
@@ -35,6 +36,14 @@ export function AppSidebar({ projects }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
+            <SidebarMenuItem>
+                 <SidebarMenuButton asChild isActive={pathname === '/all-files'} tooltip={{ children: "Todos os Arquivos" }}>
+                    <Link href="/all-files">
+                        <Files />
+                        <span>Todos os Arquivos</span>
+                    </Link>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
           {projects.map((project) => (
             <SidebarMenuItem key={project.id}>
               <SidebarMenuButton
