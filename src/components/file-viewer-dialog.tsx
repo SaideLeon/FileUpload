@@ -23,16 +23,14 @@ export function FileViewerDialog({ file, children }: FileViewerDialogProps) {
     switch (type) {
       case 'image':
         return (
-          <div className="relative w-full aspect-video">
             <Image
               src={url}
               alt={name}
-              fill
+              width={800}
+              height={600}
               unoptimized
-              className="object-contain"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-contain w-full h-auto"
             />
-          </div>
         );
       case 'video':
         return (
@@ -65,7 +63,7 @@ export function FileViewerDialog({ file, children }: FileViewerDialogProps) {
         <DialogHeader className="p-4 border-b">
           <DialogTitle className="truncate">{name}</DialogTitle>
         </DialogHeader>
-        <ScrollArea className="max-h-[90vh] overflow-y-auto">
+        <ScrollArea className="max-h-[90vh] overflow-y-auto p-4">
           {renderContent()}
         </ScrollArea>
       </DialogContent>
