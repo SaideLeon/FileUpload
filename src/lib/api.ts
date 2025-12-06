@@ -16,9 +16,8 @@ export async function getProjects(): Promise<ProjectWithDetails[]> {
   }
   const data: ProjectsResponse = await response.json();
   
-  // The API returns project details directly, so we just need to adapt the name
   return (data.projects || []).map(p => ({
-    id: p.name, // Assuming name is unique enough to be an ID
+    id: p.name, 
     name: p.name,
     fileCount: p.file_count,
     totalSize: p.total_size,
@@ -44,15 +43,14 @@ export async function getFilesByProjectName(projectName: string): Promise<Projec
     const data: ListResponse = await response.json();
     
     const files = (data.files || []).map(f => ({
-        id: f.name, // The backend doesn't provide a unique ID, using name
+        id: f.name, 
         name: f.name,
         url: f.url,
         size: f.size,
-        uploadedAt: new Date(f.uploaded_at.replace(' ', 'T') + 'Z').toISOString(), // Make it a valid ISO string
+        uploadedAt: new Date(f.uploaded_at.replace(' ', 'T') + 'Z').toISOString(),
         type: getFileType(f.name),
     }));
 
-    // sort by date descending
     return files.sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime());
 }
 
