@@ -36,13 +36,14 @@ export function FileViewerDialog({ file, children }: FileViewerDialogProps) {
             {imageError ? (
               <div className="p-8 text-center text-muted-foreground">
                 <p className="mb-4">Não foi possível carregar a imagem.</p>
-                <Button asChild variant="outline">
+                <Button variant="outline" asChild>
                   <a 
                     href={url} 
                     target="_blank" 
                     rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2"
                   >
-                    <ExternalLink className="mr-2 h-4 w-4" />
+                    <ExternalLink className="h-4 w-4" />
                     Abrir em nova aba
                   </a>
                 </Button>
@@ -89,23 +90,26 @@ export function FileViewerDialog({ file, children }: FileViewerDialogProps) {
         return (
           <div className="p-8 text-center text-muted-foreground">
             <p>A pré-visualização para este tipo de arquivo não é suportada.</p>
-            <Button asChild variant="outline" className="mt-4">
-              <a 
-                href={url} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-              >
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Abrir em nova aba
-              </a>
-            </Button>
+            <a 
+              href={url} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="mt-4 inline-block text-primary hover:underline"
+            >
+              Abrir em nova aba
+            </a>
           </div>
         );
     }
   };
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={(open) => {
+      if(open) {
+        setImageLoading(true);
+        setImageError(false);
+      }
+    }}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[95vh] p-0 overflow-hidden">
         <DialogHeader className="p-4 pb-3 border-b">
