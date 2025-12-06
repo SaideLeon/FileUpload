@@ -12,6 +12,7 @@ import { formatBytes } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { FileIcon } from './file-icon';
 import { DeleteFileButton } from './delete-file-button';
+import { ImageViewerDialog } from './image-viewer-dialog';
 
 interface FilesTableProps {
   files: (ProjectFile & {projectName?: string})[];
@@ -59,10 +60,18 @@ export function FilesTable({ files, projectName, showProjectColumn = false }: Fi
                   <FileIcon type={file.type} />
                 </TableCell>
                 <TableCell className="font-medium">
-                    <div className="flex items-center gap-2">
-                         <FileIcon type={file.type} className="sm:hidden" />
-                        <span className="truncate max-w-xs">{file.name}</span>
-                    </div>
+                  <div className="flex items-center gap-2">
+                    <FileIcon type={file.type} className="sm:hidden" />
+                    {file.type === 'image' ? (
+                      <ImageViewerDialog fileName={file.name} imageUrl={file.url}>
+                        <span className="truncate max-w-xs cursor-pointer hover:underline">{file.name}</span>
+                      </ImageViewerDialog>
+                    ) : (
+                      <a href={file.url} target="_blank" rel="noopener noreferrer" className="truncate max-w-xs hover:underline">
+                        {file.name}
+                      </a>
+                    )}
+                  </div>
                 </TableCell>
                 {showProjectColumn && <TableCell className="hidden md:table-cell">{file.projectName}</TableCell>}
                 <TableCell className="hidden md:table-cell">{formatBytes(file.size)}</TableCell>
