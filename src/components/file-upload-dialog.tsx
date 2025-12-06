@@ -33,11 +33,10 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
 
-  // Usar Server Action
   const [state, formAction, isPending] = useActionState(uploadFileAction, initialState);
 
-  // Feedback de sucesso/erro
   useEffect(() => {
     if (state.success) {
       toast({
@@ -45,12 +44,10 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
         description: state.success,
       });
       
-      // Resetar e fechar
       setFile(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
       setOpen(false);
       
-      // Recarregar a página
       router.refresh();
     } else if (state.error) {
       toast({
@@ -67,22 +64,6 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
       setFile(selectedFile);
     }
   };
-  
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!file) {
-      toast({ 
-        variant: 'destructive', 
-        title: 'Erro', 
-        description: 'Por favor selecione um arquivo para upload.' 
-      });
-      return;
-    }
-
-    // Criar FormData e chamar a action
-    const formData = new FormData(e.currentTarget);
-    formAction(formData);
-  };
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => {
@@ -90,6 +71,7 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
         if (!isOpen) {
             setFile(null);
             if (fileInputRef.current) fileInputRef.current.value = '';
+            if (formRef.current) formRef.current.reset();
         }
     }}>
       <DialogTrigger asChild>
@@ -99,7 +81,7 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <form onSubmit={handleSubmit}>
+        <form ref={formRef} action={formAction}>
           <DialogHeader>
             <DialogTitle>Upload File</DialogTitle>
             <DialogDescription>
