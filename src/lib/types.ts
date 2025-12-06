@@ -18,3 +18,28 @@ export interface ProjectWithDetails extends Project {
   fileCount: number;
   totalSize: number; // in bytes
 }
+
+// Types for Go API responses
+export interface ApiProjectInfo {
+	name: string;
+	file_count: number;
+	total_size: number;
+}
+
+export interface ProjectsResponse {
+	Projects: ApiProjectInfo[];
+	Total: number;
+}
+
+export interface ApiFileInfo {
+	name: string;
+	url: string;
+	size: number;
+	uploaded_at: string; // "2006-01-02 15:04:05"
+}
+
+export interface ListResponse {
+	Project: string;
+	Files: ApiFileInfo[];
+	Total: number;
+}

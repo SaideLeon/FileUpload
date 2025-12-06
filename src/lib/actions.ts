@@ -1,9 +1,14 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { mockFilesStore } from '@/lib/data';
 import type { ProjectFile } from './types';
-import {faker} from '@faker-js/faker';
+
+const API_URL = process.env.API_BASE_URL;
+
+if (!API_URL) {
+  throw new Error('Missing API_BASE_URL environment variable');
+}
+
 
 export async function deleteFileAction(formData: FormData) {
   const projectName = formData.get('projectName') as string;
@@ -14,22 +19,27 @@ export async function deleteFileAction(formData: FormData) {
   }
 
   try {
-    const projectFiles = mockFilesStore.get(projectName);
-    if (projectFiles) {
-      const updatedFiles = projectFiles.filter(file => file.name !== fileName);
-      mockFilesStore.set(projectName, updatedFiles);
+    const response = await fetch(`${API_URL}/delete?project=${projectName}&file=${fileName}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to delete the file.');
     }
+    
     revalidatePath(`/${projectName}`);
     return { success: `File "${fileName}" was deleted successfully.` };
   } catch (error) {
-    return { error: 'Failed to delete the file.' };
+    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { error: message };
   }
 }
 
 export async function uploadFileAction(formData: FormData) {
     const projectName = formData.get('projectName') as string;
     const file = formData.get('file') as File;
-    const uploadUrl = 'https://uploader.nativespeak.app/upload';
+    const uploadUrl = `${API_URL}/upload`;
 
     if (!projectName || !file || file.size === 0) {
         return { error: 'Project name and a valid file are required.' };
@@ -38,6 +48,7 @@ export async function uploadFileAction(formData: FormData) {
     try {
         const uploadFormData = new FormData();
         uploadFormData.append('file', file);
+        uploadFormData.append('project', projectName);
 
         const response = await fetch(uploadUrl, {
             method: 'POST',
@@ -47,35 +58,15 @@ export async function uploadFileAction(formData: FormData) {
         if (!response.ok) {
             const errorText = await response.text();
             console.error('Upload failed:', errorText);
-            throw new Error(`Upload failed with status: ${response.status}`);
+            let errorMessage = `Upload failed with status: ${response.status}`;
+            try {
+                const errorJson = JSON.parse(errorText);
+                errorMessage = errorJson.error || errorMessage;
+            } catch (e) {
+                // ignore
+            }
+            throw new Error(errorMessage);
         }
-
-        const result = await response.json();
-        const uploadedFileUrl = result.url;
-
-
-        const projectFiles = mockFilesStore.get(projectName) || [];
-        
-        const fileTypeMap: Record<string, ProjectFile['type']> = {
-            'image': 'image',
-            'video': 'video',
-            'pdf': 'document', 'msword': 'document', 'vnd.openxmlformats-officedocument.wordprocessingml.document': 'document',
-            'csv': 'spreadsheet', 'vnd.ms-excel': 'spreadsheet', 'vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'spreadsheet',
-        };
-
-        const primaryType = file.type.split('/')[0];
-        const secondaryType = file.type.split('/')[1];
-
-        const newFile: ProjectFile = {
-            id: faker.string.uuid(),
-            name: file.name,
-            url: uploadedFileUrl,
-            size: file.size,
-            uploadedAt: new Date().toISOString(),
-            type: fileTypeMap[primaryType] || fileTypeMap[secondaryType] || 'other',
-        };
-
-        mockFilesStore.set(projectName, [newFile, ...projectFiles]);
 
         revalidatePath(`/${projectName}`);
         return { success: `File "${file.name}" uploaded successfully.` };
