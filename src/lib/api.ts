@@ -17,7 +17,7 @@ export async function getProjects(): Promise<ProjectWithDetails[]> {
   const data: ProjectsResponse = await response.json();
   
   // The API returns project details directly, so we just need to adapt the name
-  return (data.Projects || []).map(p => ({
+  return (data.projects || []).map(p => ({
     id: p.name, // Assuming name is unique enough to be an ID
     name: p.name,
     fileCount: p.file_count,
@@ -27,7 +27,7 @@ export async function getProjects(): Promise<ProjectWithDetails[]> {
 
 export async function getProjectByName(name: string): Promise<Project | null> {
     const projects = await getProjects();
-    const project = projects.find(p => p.name === name);
+    const project = projects.find(p => p.name.toLowerCase() === name.toLowerCase());
     if (!project) return null;
     return {
         id: project.id,
