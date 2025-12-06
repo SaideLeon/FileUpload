@@ -1,7 +1,6 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import type { ProjectFile } from './types';
 
 const API_URL = process.env.API_BASE_URL;
 
@@ -10,7 +9,7 @@ if (!API_URL) {
 }
 
 
-export async function deleteFileAction(formData: FormData) {
+export async function deleteFileAction(prevState: any, formData: FormData) {
   const projectName = formData.get('projectName') as string;
   const fileName = formData.get('fileName') as string;
 
@@ -29,6 +28,7 @@ export async function deleteFileAction(formData: FormData) {
     }
     
     revalidatePath(`/${projectName}`);
+    revalidatePath('/');
     return { success: `File "${fileName}" was deleted successfully.` };
   } catch (error) {
     const message = error instanceof Error ? error.message : 'An unknown error occurred.';
@@ -36,7 +36,7 @@ export async function deleteFileAction(formData: FormData) {
   }
 }
 
-export async function uploadFileAction(formData: FormData) {
+export async function uploadFileAction(prevState: any, formData: FormData) {
     const projectName = formData.get('projectName') as string;
     const file = formData.get('file') as File;
     const uploadUrl = `${API_URL}/upload`;
@@ -57,21 +57,20 @@ export async function uploadFileAction(formData: FormData) {
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('Upload failed:', errorText);
             let errorMessage = `Upload failed with status: ${response.status}`;
             try {
                 const errorJson = JSON.parse(errorText);
                 errorMessage = errorJson.error || errorMessage;
             } catch (e) {
-                // ignore
+                // ignore if parsing fails, use the status text
             }
             throw new Error(errorMessage);
         }
 
         revalidatePath(`/${projectName}`);
+        revalidatePath('/');
         return { success: `File "${file.name}" uploaded successfully.` };
     } catch (error) {
-        console.error('Upload action error:', error);
         if (error instanceof Error) {
             return { error: `Failed to upload the file: ${error.message}` };
         }
