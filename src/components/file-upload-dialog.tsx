@@ -14,7 +14,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Upload } from 'lucide-react';
-import { useRef, useState, useTransition, useActionState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import { useActionState } from 'react';
 import { uploadFileAction } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
 
@@ -31,6 +32,7 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
   const [fileName, setFileName] = useState('');
   
   useEffect(() => {
+    if (!state) return;
     if (state.success) {
       toast({ title: 'Success', description: state.success });
       setOpen(false);
