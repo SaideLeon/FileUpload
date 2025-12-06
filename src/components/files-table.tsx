@@ -12,7 +12,7 @@ import { formatBytes } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { FileIcon } from './file-icon';
 import { DeleteFileButton } from './delete-file-button';
-import { ImageViewerDialog } from './image-viewer-dialog';
+import { FileViewerDialog } from './file-viewer-dialog';
 
 interface FilesTableProps {
   files: (ProjectFile & {projectName?: string})[];
@@ -35,6 +35,8 @@ export function FilesTable({ files, projectName, showProjectColumn = false }: Fi
         </Card>
     );
   }
+
+  const isViewable = (type: ProjectFile['type']) => ['image', 'video', 'document'].includes(type);
 
   return (
     <Card>
@@ -62,10 +64,10 @@ export function FilesTable({ files, projectName, showProjectColumn = false }: Fi
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-2">
                     <FileIcon type={file.type} className="sm:hidden" />
-                    {file.type === 'image' ? (
-                      <ImageViewerDialog fileName={file.name} imageUrl={file.url}>
+                    {isViewable(file.type) ? (
+                      <FileViewerDialog file={file}>
                         <span className="truncate max-w-xs cursor-pointer hover:underline">{file.name}</span>
-                      </ImageViewerDialog>
+                      </FileViewerDialog>
                     ) : (
                       <a href={file.url} target="_blank" rel="noopener noreferrer" className="truncate max-w-xs hover:underline">
                         {file.name}
