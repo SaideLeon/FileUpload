@@ -12,6 +12,7 @@ export interface ProjectFile {
   size: number; // in bytes
   uploadedAt: string; // ISO date string
   type: FileType;
+  projectName?: string;
 }
 
 export interface ProjectWithDetails extends Project {
@@ -27,8 +28,8 @@ export interface ApiProjectInfo {
 }
 
 export interface ProjectsResponse {
-	Projects: ApiProjectInfo[];
-	Total: number;
+	projects: ApiProjectInfo[];
+	total: number;
 }
 
 export interface ApiFileInfo {
@@ -39,7 +40,7 @@ export interface ApiFileInfo {
 }
 
 export interface ListResponse {
-	Project: string;
-	Files: ApiFileInfo[];
-	Total: number;
+	project: string;
+	files: ApiFileInfo[];
+	total: number;
 }

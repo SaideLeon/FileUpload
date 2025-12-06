@@ -43,7 +43,7 @@ export async function getFilesByProjectName(projectName: string): Promise<Projec
     }
     const data: ListResponse = await response.json();
     
-    const files = (data.Files || []).map(f => ({
+    const files = (data.files || []).map(f => ({
         id: f.name, // The backend doesn't provide a unique ID, using name
         name: f.name,
         url: f.url,
