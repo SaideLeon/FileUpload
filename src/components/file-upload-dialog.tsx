@@ -14,8 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Upload } from 'lucide-react';
-import { useRef, useState, useTransition } from 'react';
-import { useFormState } from 'react-dom';
+import { useRef, useState, useTransition, useActionState, useEffect } from 'react';
 import { uploadFileAction } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
 
@@ -26,28 +25,24 @@ const initialState = {
 
 export function FileUploadDialog({ projectName }: { projectName: string }) {
   const [open, setOpen] = useState(false);
-  const [formState, formAction] = useFormState(uploadFileAction, initialState);
-  const [isPending, startTransition] = useTransition();
+  const [state, formAction, isPending] = useActionState(uploadFileAction, initialState);
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState('');
+  
+  useEffect(() => {
+    if (state.success) {
+      toast({ title: 'Success', description: state.success });
+      setOpen(false);
+      setFileName('');
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    } else if (state.error) {
+      toast({ variant: 'destructive', title: 'Error', description: state.error });
+    }
+  }, [state, toast]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFileName(e.target.files?.[0]?.name || '');
-  };
-
-  const handleFormAction = (formData: FormData) => {
-    startTransition(async () => {
-        const result = await uploadFileAction(formData);
-        if (result?.success) {
-            toast({ title: 'Success', description: result.success });
-            setOpen(false);
-            setFileName('');
-            if (fileInputRef.current) fileInputRef.current.value = '';
-        } else if (result?.error) {
-            toast({ variant: 'destructive', title: 'Error', description: result.error });
-        }
-    });
   };
 
   return (
@@ -59,7 +54,7 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <form action={handleFormAction}>
+        <form action={formAction}>
           <DialogHeader>
             <DialogTitle>Upload File</DialogTitle>
             <DialogDescription>
