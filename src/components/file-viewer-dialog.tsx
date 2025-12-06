@@ -89,15 +89,18 @@ export function FileViewerDialog({ file, children }: FileViewerDialogProps) {
       default:
         return (
           <div className="p-8 text-center text-muted-foreground">
-            <p>A pré-visualização para este tipo de arquivo não é suportada.</p>
-            <a 
-              href={url} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="mt-4 inline-block text-primary hover:underline"
-            >
-              Abrir em nova aba
-            </a>
+            <p className="mb-4">A pré-visualização para este tipo de arquivo não é suportada.</p>
+            <Button variant="outline" asChild>
+              <a 
+                href={url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2"
+              >
+                <ExternalLink className="h-4 w-4" />
+                Abrir em nova aba
+              </a>
+            </Button>
           </div>
         );
     }
