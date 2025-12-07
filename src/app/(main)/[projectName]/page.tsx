@@ -8,15 +8,18 @@ import { useEffect, useState } from 'react';
 import { AppHeader } from '@/components/app-header';
 import { getProjects } from '@/lib/api';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useParams } from 'next/navigation';
 
-export default function ProjectPage({ params }: { params: { projectName: string } }) {
-  const { projectName } = params;
+export default function ProjectPage() {
+  const params = useParams();
+  const projectName = params.projectName as string;
   const [project, setProject] = useState<Project | null>(null);
   const [files, setFiles] = useState<ProjectFile[]>([]);
   const [allProjects, setAllProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!projectName) return;
     async function fetchData() {
       setLoading(true);
       try {
