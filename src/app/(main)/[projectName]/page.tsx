@@ -1,7 +1,6 @@
 'use client'
 
 import { FilesTable } from '@/components/files-table';
-import { ProjectSummary } from '@/components/project-summary';
 import { getFilesByProjectName, getProjectByName } from '@/lib/api';
 import type { Project, ProjectFile } from '@/lib/types';
 import { useEffect, useState } from 'react';
@@ -50,7 +49,6 @@ export default function ProjectPage() {
             <Skeleton className="h-10 w-28" />
         </header>
         <main className="flex-1 p-4 md:p-6 space-y-6 overflow-y-auto">
-          <Skeleton className="h-48 w-full" />
           <Skeleton className="h-96 w-full" />
         </main>
       </>
@@ -74,7 +72,6 @@ export default function ProjectPage() {
     <>
       <AppHeader currentProject={project} allProjects={allProjects} />
       <main className="flex-1 p-4 md:p-6 space-y-6 overflow-y-auto">
-        <ProjectSummary project={project} files={files} />
         <FilesTable files={files} projectName={project.name} />
       </main>
     </>
