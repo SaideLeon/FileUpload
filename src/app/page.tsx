@@ -54,7 +54,7 @@ export default function LandingPage() {
     },
     {
       question: "Como integro com minha aplicação?",
-      answer: "Use nossa API REST simples. Basta fazer um POST com o arquivo e o nome do projeto. Você receberá a URL pública instantaneamente.",
+      answer: "Use nossa API REST simples. Basta fazer um POST com o arquivo e o nome do projeto. Você receberá a URL pública instantaneamente. Veja a documentação para mais detalhes.",
     },
   ];
 
@@ -71,6 +71,9 @@ export default function LandingPage() {
           </Link>
           <Link href="#faq" className="text-sm font-medium hover:underline underline-offset-4 text-muted-foreground" prefetch={false}>
             FAQ
+          </Link>
+          <Link href="/documentation" className="text-sm font-medium hover:underline underline-offset-4 text-muted-foreground" prefetch={false}>
+            Documentação
           </Link>
           <Button asChild>
             <Link href="/projects">Começar Agora</Link>
@@ -98,9 +101,12 @@ export default function LandingPage() {
               Upload inteligente com organização automática por projetos. Acesse seus arquivos de qualquer lugar com URLs
               públicas estáveis.
             </p>
-            <div className="space-x-4">
+            <div className="flex items-center justify-center gap-4">
               <Button asChild size="lg">
                 <Link href="/projects">Começar Agora</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link href="/documentation">Ver Documentação</Link>
               </Button>
             </div>
           </div>
@@ -169,5 +175,3 @@ export default function LandingPage() {
     </div>
   )
 }
-
-    

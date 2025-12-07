@@ -10,7 +10,7 @@ import {
   SidebarFooter
 } from '@/components/ui/sidebar';
 import type { ProjectWithDetails } from '@/lib/types';
-import { FolderGit2, Settings, Files } from 'lucide-react';
+import { FolderGit2, Settings, Files, BookText } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { Logo } from './logo';
@@ -41,6 +41,14 @@ export function AppSidebar({ projects }: AppSidebarProps) {
                     <Link href="/all-files">
                         <Files />
                         <span>Todos os Arquivos</span>
+                    </Link>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+             <SidebarMenuItem>
+                 <SidebarMenuButton asChild isActive={pathname === '/documentation'} tooltip={{ children: "Documentação" }}>
+                    <Link href="/documentation">
+                        <BookText />
+                        <span>Documentação</span>
                     </Link>
                 </SidebarMenuButton>
             </SidebarMenuItem>

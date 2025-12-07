@@ -16,7 +16,9 @@ export default function MainLayout({
   const [projects, setProjects] = useState<ProjectWithDetails[]>([]);
   const pathname = usePathname();
 
-  const shouldShowHeader = !pathname.startsWith('/projects/');
+  // The documentation page doesn't need an AppHeader from the layout, 
+  // as it provides its own.
+  const shouldShowHeader = !pathname.startsWith('/projects/') && !pathname.startsWith('/documentation');
   
   useEffect(() => {
     async function fetchProjects() {
