@@ -2,26 +2,31 @@
 
 import type { Project, ProjectFile, ProjectWithDetails, ProjectsResponse, ListResponse } from '@/lib/types';
 
-const API_URL = process.env.API_BASE_URL;
+const API_URL = process.env.API_BASE_URL || 'https://uploader.nativespeak.app';
 
 if (!API_URL) {
   throw new Error('Missing API_BASE_URL environment variable');
 }
 
 export async function getProjects(): Promise<ProjectWithDetails[]> {
-  const response = await fetch(`${API_URL}/projects`, { next: { revalidate: 0 } });
-  if (!response.ok) {
-    console.error("Failed to fetch projects:", await response.text());
+  try {
+    const response = await fetch(`${API_URL}/projects`, { next: { revalidate: 0 } });
+    if (!response.ok) {
+      console.error("Failed to fetch projects:", await response.text());
+      return [];
+    }
+    const data: ProjectsResponse = await response.json();
+    
+    return (data.projects || []).map(p => ({
+      id: p.name, 
+      name: p.name,
+      fileCount: p.file_count,
+      totalSize: p.total_size,
+    }));
+  } catch (error) {
+    console.error("Error in getProjects:", error);
     return [];
   }
-  const data: ProjectsResponse = await response.json();
-  
-  return (data.projects || []).map(p => ({
-    id: p.name, 
-    name: p.name,
-    fileCount: p.file_count,
-    totalSize: p.total_size,
-  }));
 }
 
 export async function getProjectByName(name: string): Promise<Project | null> {
@@ -35,6 +40,7 @@ export async function getProjectByName(name: string): Promise<Project | null> {
 }
 
 export async function getFilesByProjectName(projectName: string): Promise<ProjectFile[]> {
+  try {
     const response = await fetch(`${API_URL}/list?project=${projectName}`, { next: { revalidate: 0 } });
     if (!response.ok) {
         console.error(`Failed to fetch files for ${projectName}:`, await response.text());
@@ -52,7 +58,53 @@ export async function getFilesByProjectName(projectName: string): Promise<Projec
     }));
 
     return files.sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime());
+  } catch(error) {
+    console.error(`Error fetching files for ${projectName}:`, error);
+    return [];
+  }
 }
+
+export async function uploadFile(formData: FormData): Promise<{ success: string; error?: never; } | { error: string; success?: never; }> {
+  try {
+    const response = await fetch(`${API_URL}/upload`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorJson = await response.json().catch(() => ({ error: `Upload failed with status: ${response.status}` }));
+      throw new Error(errorJson.error);
+    }
+
+    const result = await response.json();
+    const fileName = formData.get('file') instanceof File ? (formData.get('file') as File).name : 'file';
+
+    return { success: `File "${fileName}" uploaded successfully.` };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error during upload.';
+    console.error('Upload error:', error);
+    return { error: message };
+  }
+}
+
+export async function deleteFile(projectName: string, fileName: string): Promise<{ success: string; error?: never; } | { error: string; success?: never; }> {
+    try {
+        const response = await fetch(`${API_URL}/delete?project=${projectName}&file=${fileName}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to delete the file.');
+        }
+        
+        return { success: `File "${fileName}" was deleted successfully.` };
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+        return { error: message };
+    }
+}
+
 
 function getFileType(fileName: string): ProjectFile['type'] {
     const extension = fileName.split('.').pop()?.toLowerCase();

@@ -13,15 +13,11 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { uploadFile } from '@/lib/api';
 import { Upload } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
-
-// Obter a URL da API
-const API_URL = typeof window !== 'undefined' 
-  ? (window as any).__API_URL__ || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://uploader.nativespeak.app'
-  : process.env.NEXT_PUBLIC_API_BASE_URL || 'https://uploader.nativespeak.app';
 
 export function FileUploadDialog({ projectName }: { projectName: string }) {
   const [open, setOpen] = useState(false);
@@ -57,30 +53,15 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
       formData.append('file', file);
       formData.append('project', projectName);
       
-      const uploadUrl = `${API_URL}/upload`;
-      console.log('Uploading to:', uploadUrl);
+      const result = await uploadFile(formData);
 
-      const response = await fetch(uploadUrl, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        let errorMessage = `Upload failed with status: ${response.status}`;
-        try {
-          const errorJson = await response.json();
-          errorMessage = errorJson.error || errorMessage;
-        } catch (e) {
-          // Se não conseguir parsear JSON, usa a mensagem padrão
-        }
-        throw new Error(errorMessage);
+      if (result.error) {
+        throw new Error(result.error);
       }
-
-      const result = await response.json();
       
       toast({ 
         title: 'Sucesso', 
-        description: `Arquivo "${file.name}" enviado com sucesso.` 
+        description: result.success
       });
       
       // Resetar e fechar
