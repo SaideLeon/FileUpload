@@ -9,23 +9,47 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose
+  DialogClose,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { uploadFile } from '@/lib/api';
 import { Upload } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useRef, useState, useActionState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
+import { uploadFileAction } from '@/lib/actions';
+
+const initialState = {
+  success: '',
+  error: '',
+};
 
 export function FileUploadDialog({ projectName }: { projectName: string }) {
   const [open, setOpen] = useState(false);
-  const { toast } = useToast();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const { toast } = useToast();
+  const [state, formAction, isPending] = useActionState(uploadFileAction, initialState);
+
+  useEffect(() => {
+    if (state.error) {
+      toast({
+        variant: 'destructive',
+        title: 'Erro no Upload',
+        description: state.error,
+      });
+    } else if (state.success) {
+      toast({
+        title: 'Sucesso',
+        description: state.success,
+      });
+      // Reset and close on success
+      setFile(null);
+      formRef.current?.reset();
+      setOpen(false);
+    }
+  }, [state, toast]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -34,66 +58,18 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
     }
   };
   
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    
-    if (!file) {
-      toast({ 
-        variant: 'destructive', 
-        title: 'Erro', 
-        description: 'Por favor selecione um arquivo para upload.' 
-      });
-      return;
-    }
-
-    setUploading(true);
-
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('project', projectName);
-      
-      const result = await uploadFile(formData);
-
-      if (result.error) {
-        throw new Error(result.error);
-      }
-      
-      toast({ 
-        title: 'Sucesso', 
-        description: result.success
-      });
-      
-      // Resetar e fechar
+  const handleOpenChange = (isOpen: boolean) => {
+    if (isPending) return; // Prevent closing while uploading
+    setOpen(isOpen);
+    if (!isOpen) {
+      // Reset form if dialog is closed
       setFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-      setOpen(false);
-      
-      // Recarregar a página para mostrar o novo arquivo
-      router.refresh();
-
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Erro desconhecido ao fazer upload.';
-      console.error('Upload error:', error);
-      
-      toast({ 
-        variant: 'destructive', 
-        title: 'Erro no Upload', 
-        description: message 
-      });
-    } finally {
-      setUploading(false);
+      formRef.current?.reset();
     }
-  };
+  }
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => {
-        setOpen(isOpen);
-        if (!isOpen) {
-            setFile(null);
-            if (fileInputRef.current) fileInputRef.current.value = '';
-        }
-    }}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button>
           <Upload className="mr-2 h-4 w-4" />
@@ -101,7 +77,7 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <form onSubmit={handleSubmit}>
+        <form ref={formRef} action={formAction}>
           <DialogHeader>
             <DialogTitle>Upload File</DialogTitle>
             <DialogDescription>
@@ -111,14 +87,14 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
           <div className="grid gap-4 py-4">
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <Label htmlFor="file">File</Label>
-              <Input 
-                id="file" 
-                name="file" 
-                type="file" 
-                required 
-                onChange={handleFileChange} 
+              <Input
+                id="file"
+                name="file"
+                type="file"
+                required
+                onChange={handleFileChange}
                 ref={fileInputRef}
-                disabled={uploading}
+                disabled={isPending}
               />
               {file && (
                 <p className="text-xs text-muted-foreground">
@@ -126,15 +102,16 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
                 </p>
               )}
             </div>
+            <input type="hidden" name="project" value={projectName} />
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="button" variant="secondary" disabled={uploading}>
+              <Button type="button" variant="secondary" disabled={isPending}>
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={uploading || !file}>
-              {uploading ? 'Uploading...' : 'Upload'}
+            <Button type="submit" disabled={isPending || !file}>
+              {isPending ? 'Uploading...' : 'Upload'}
             </Button>
           </DialogFooter>
         </form>
