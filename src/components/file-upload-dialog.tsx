@@ -15,16 +15,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Upload } from 'lucide-react';
-import { useRef, useState, useActionState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useRef, useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { uploadFileAction } from '@/lib/actions';
 import { useAuth } from '@/context/auth-context';
 import type { ProjectWithDetails } from '@/lib/types';
-
-const initialState = {
-  success: '',
-  error: '',
-};
 
 interface FileUploadDialogProps {
   projectName: string;
@@ -38,36 +33,20 @@ export function FileUploadDialog({ projectName, allProjects }: FileUploadDialogP
   const formRef = useRef<HTMLFormElement>(null);
   const [selectedProject, setSelectedProject] = useState(projectName || 'default');
   const [newProjectName, setNewProjectName] = useState('');
-
-  const { toast } = useToast();
-  const [state, formAction, isPending] = useActionState(uploadFileAction, initialState);
-  const { apiKey } = useAuth();
+  const [isPending, setIsPending] = useState(false);
   
-  useEffect(() => {
-    if (state.error) {
-      toast({
-        variant: 'destructive',
-        title: 'Erro no Upload',
-        description: state.error,
-      });
-    } else if (state.success) {
-      toast({
-        title: 'Sucesso',
-        description: state.success,
-      });
-      // Reset and close on success
-      setFile(null);
-      setNewProjectName('');
-      setSelectedProject(projectName || 'default');
-      formRef.current?.reset();
-      setOpen(false);
-    }
-  }, [state, toast, projectName]);
-
+  const { toast } = useToast();
+  const { apiKey } = useAuth();
+  const router = useRouter();
+  
   useEffect(() => {
     if (open) {
       setSelectedProject(projectName || 'default');
       setNewProjectName('');
+      setFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   }, [open, projectName]);
 
@@ -81,17 +60,56 @@ export function FileUploadDialog({ projectName, allProjects }: FileUploadDialogP
   const handleOpenChange = (isOpen: boolean) => {
     if (isPending) return; // Prevent closing while uploading
     setOpen(isOpen);
-    if (!isOpen) {
-      // Reset form if dialog is closed
-      setFile(null);
-      setNewProjectName('');
-      setSelectedProject(projectName || 'default');
-      formRef.current?.reset();
-    }
   }
 
   const finalProjectName = selectedProject === '__new__' ? newProjectName : selectedProject;
   const canSubmit = file && apiKey && finalProjectName;
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!canSubmit) return;
+
+    setIsPending(true);
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('project', finalProjectName);
+    
+    const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://uploader.nativespeak.app';
+
+    try {
+      const response = await fetch(`${API_URL}/api/upload`, {
+        method: 'POST',
+        headers: { 'Authorization': apiKey },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: `Upload failed: ${response.statusText}` }));
+        throw new Error(errorData.error);
+      }
+      
+      toast({
+        title: 'Sucesso',
+        description: `Arquivo "${file.name}" enviado com sucesso.`,
+      });
+      
+      setOpen(false);
+      
+      // Revalidate data by refreshing the page.
+      // This is a simple way to ensure the file list is updated.
+      window.location.reload();
+
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Erro no Upload',
+        description: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido.',
+      });
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -102,7 +120,7 @@ export function FileUploadDialog({ projectName, allProjects }: FileUploadDialogP
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <form ref={formRef} action={formAction}>
+        <form ref={formRef} onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Upload File</DialogTitle>
             <DialogDescription>
@@ -123,7 +141,7 @@ export function FileUploadDialog({ projectName, allProjects }: FileUploadDialogP
               />
               {file && (
                 <p className="text-xs text-muted-foreground">
-                  Selecionado: {file.name} ({(file.size / 1024).toFixed(1)} KB)
+                  Selecionado: {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
                 </p>
               )}
             </div>
@@ -161,12 +179,10 @@ export function FileUploadDialog({ projectName, allProjects }: FileUploadDialogP
                   onChange={(e) => setNewProjectName(e.target.value)}
                   placeholder="ex: meu-incrivel-projeto"
                   disabled={isPending}
+                  required
                 />
               </div>
             )}
-
-            <input type="hidden" name="project" value={finalProjectName} />
-            <input type="hidden" name="apiKey" value={apiKey || ''} />
           </div>
           <DialogFooter>
             <DialogClose asChild>

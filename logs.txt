@@ -1,235 +1,36 @@
-025-Dec-14 16:46:42.482258
-Starting deployment of SaideLeon/FileUpload:main to Oracle Cloud.
-2025-Dec-14 16:46:42.681023
-Preparing container with helper image: ghcr.io/coollabsio/coolify-helper:1.0.12
-2025-Dec-14 16:46:45.549989
-----------------------------------------
-2025-Dec-14 16:46:45.556254
-Importing SaideLeon/FileUpload:main (commit sha a7f98a276f58421cc64def82bdcbc8364830433a) to /artifacts/hgkowogwc8so44c0co8c4c4o.
-2025-Dec-14 16:46:46.823358
-Image not found (ew080kccow8swoc488kow8o8:a7f98a276f58421cc64def82bdcbc8364830433a). Building new image.
-2025-Dec-14 16:46:48.306143
-----------------------------------------
-2025-Dec-14 16:46:48.312096
-Building docker image started.
-2025-Dec-14 16:46:48.318349
-To check the current progress, click on Show Debug Logs.
-2025-Dec-14 16:47:55.679787
-Oops something is not okay, are you okay? 😢
-2025-Dec-14 16:47:55.705812
-#0 building with "default" instance using docker driver
-2025-Dec-14 16:47:55.705812
-2025-Dec-14 16:47:55.705812
-#1 [internal] load build definition from Dockerfile
-2025-Dec-14 16:47:55.705812
-#1 transferring dockerfile: 1.71kB done
-2025-Dec-14 16:47:55.705812
-#1 DONE 0.0s
-2025-Dec-14 16:47:55.705812
-2025-Dec-14 16:47:55.705812
-#2 [internal] load metadata for docker.io/library/node:22-alpine
-2025-Dec-14 16:47:55.705812
-#2 DONE 0.5s
-2025-Dec-14 16:47:55.705812
-2025-Dec-14 16:47:55.705812
-#3 [internal] load .dockerignore
-2025-Dec-14 16:47:55.705812
-#3 transferring context: 2B done
-2025-Dec-14 16:47:55.705812
-#3 DONE 0.1s
-2025-Dec-14 16:47:55.705812
-2025-Dec-14 16:47:55.705812
-#4 [builder 1/6] FROM docker.io/library/node:22-alpine@sha256:9632533eda8061fc1e9960cfb3f8762781c07a00ee7317f5dc0e13c05e15166f
-2025-Dec-14 16:47:55.705812
-#4 DONE 0.0s
-2025-Dec-14 16:47:55.705812
-2025-Dec-14 16:47:55.705812
-#5 [builder 2/6] WORKDIR /app
-2025-Dec-14 16:47:55.705812
-#5 CACHED
-2025-Dec-14 16:47:55.705812
-2025-Dec-14 16:47:55.705812
-#6 [internal] load build context
-2025-Dec-14 16:47:55.705812
-#6 transferring context: 582.45kB 0.0s done
-2025-Dec-14 16:47:55.705812
-#6 DONE 0.1s
-2025-Dec-14 16:47:55.705812
-2025-Dec-14 16:47:55.705812
-#7 [builder 3/6] COPY package*.json ./
-2025-Dec-14 16:47:55.705812
-#7 CACHED
-2025-Dec-14 16:47:55.705812
-2025-Dec-14 16:47:55.705812
-#8 [builder 4/6] RUN npm install
-2025-Dec-14 16:47:55.705812
-#8 2.681 npm warn deprecated rimraf@2.7.1: Rimraf versions prior to v4 are no longer supported
-2025-Dec-14 16:47:55.705812
-#8 3.469 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
-2025-Dec-14 16:47:55.705812
-#8 5.858 npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
-2025-Dec-14 16:47:55.705812
-#8 24.02
-2025-Dec-14 16:47:55.705812
-#8 24.02 added 477 packages, and audited 478 packages in 24s
-2025-Dec-14 16:47:55.705812
-#8 24.02
-2025-Dec-14 16:47:55.705812
-#8 24.02 75 packages are looking for funding
-2025-Dec-14 16:47:55.705812
-#8 24.02   run `npm fund` for details
-2025-Dec-14 16:47:55.705812
-#8 24.03
-2025-Dec-14 16:47:55.705812
-#8 24.03 7 vulnerabilities (3 low, 3 moderate, 1 high)
-2025-Dec-14 16:47:55.705812
-#8 24.03
-2025-Dec-14 16:47:55.705812
-#8 24.03 To address issues that do not require attention, run:
-2025-Dec-14 16:47:55.705812
-#8 24.03   npm audit fix
-2025-Dec-14 16:47:55.705812
-#8 24.03
-2025-Dec-14 16:47:55.705812
-#8 24.03 To address all issues (including breaking changes), run:
-2025-Dec-14 16:47:55.705812
-#8 24.03   npm audit fix --force
-2025-Dec-14 16:47:55.705812
-#8 24.03
-2025-Dec-14 16:47:55.705812
-#8 24.03 Run `npm audit` for details.
-2025-Dec-14 16:47:55.705812
-#8 24.03 npm notice
-2025-Dec-14 16:47:55.705812
-#8 24.03 npm notice New major version of npm available! 10.9.4 -> 11.7.0
-2025-Dec-14 16:47:55.705812
-#8 24.03 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.7.0
-2025-Dec-14 16:47:55.705812
-#8 24.03 npm notice To update run: npm install -g npm@11.7.0
-2025-Dec-14 16:47:55.705812
-#8 24.03 npm notice
-2025-Dec-14 16:47:55.705812
-#8 DONE 31.2s
-2025-Dec-14 16:47:55.705812
-2025-Dec-14 16:47:55.705812
-#9 [builder 5/6] COPY . .
-2025-Dec-14 16:47:55.705812
-#9 DONE 0.1s
-2025-Dec-14 16:47:55.705812
-2025-Dec-14 16:47:55.705812
-#10 [builder 6/6] RUN npm run build
-2025-Dec-14 16:47:55.705812
-#10 0.274
-2025-Dec-14 16:47:55.705812
-#10 0.274 > nextn@0.1.0 build
-2025-Dec-14 16:47:55.705812
-#10 0.274 > NODE_ENV=production next build
-2025-Dec-14 16:47:55.705812
-#10 0.274
-2025-Dec-14 16:47:55.705812
-#10 1.352 Attention: Next.js now collects completely anonymous telemetry regarding usage.
-2025-Dec-14 16:47:55.705812
-#10 1.352 This information is used to shape Next.js' roadmap and prioritize features.
-2025-Dec-14 16:47:55.705812
-#10 1.352 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
-2025-Dec-14 16:47:55.705812
-#10 1.352 https://nextjs.org/telemetry
-2025-Dec-14 16:47:55.705812
-#10 1.352
-2025-Dec-14 16:47:55.705812
-#10 1.467    ▲ Next.js 15.5.9
-2025-Dec-14 16:47:55.705812
-#10 1.467
-2025-Dec-14 16:47:55.705812
-#10 1.562    Creating an optimized production build ...
-2025-Dec-14 16:47:55.705812
-#10 29.36  ✓ Compiled successfully in 24.3s
-2025-Dec-14 16:47:55.705812
-#10 29.37    Skipping validation of types
-2025-Dec-14 16:47:55.705812
-#10 29.37    Skipping linting
-2025-Dec-14 16:47:55.705812
-#10 29.69    Collecting page data ...
-2025-Dec-14 16:47:55.705812
-#10 32.64    Generating static pages (0/10) ...
-2025-Dec-14 16:47:55.705812
-#10 33.57    Generating static pages (2/10)
-2025-Dec-14 16:47:55.705812
-#10 33.57    Generating static pages (4/10)
-2025-Dec-14 16:47:55.705812
-#10 33.57    Generating static pages (7/10)
-2025-Dec-14 16:47:55.705812
-#10 34.12 Error occurred prerendering page "/documentation". Read more: https://nextjs.org/docs/messages/prerender-error
-2025-Dec-14 16:47:55.705812
-#10 34.12 Error: useSidebar must be used within a SidebarProvider.
-2025-Dec-14 16:47:55.705812
-#10 34.12     at B (.next/server/chunks/867.js:1:13830)
-2025-Dec-14 16:47:55.705812
-#10 34.12     at <unknown> (.next/server/chunks/867.js:1:17356) {
-2025-Dec-14 16:47:55.705812
-#10 34.12   digest: '3469081749'
-2025-Dec-14 16:47:55.705812
-#10 34.12 }
-2025-Dec-14 16:47:55.705812
-#10 34.12 Export encountered an error on /(main)/documentation/page: /documentation, exiting the build.
-2025-Dec-14 16:47:55.705812
-#10 34.13  ⨯ Next.js build worker exited with code: 1 and signal: null
-2025-Dec-14 16:47:55.705812
-#10 ERROR: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1
-2025-Dec-14 16:47:55.705812
-------
-2025-Dec-14 16:47:55.705812
-> [builder 6/6] RUN npm run build:
-2025-Dec-14 16:47:55.705812
-33.57    Generating static pages (4/10)
-2025-Dec-14 16:47:55.705812
-33.57    Generating static pages (7/10)
-2025-Dec-14 16:47:55.705812
-34.12 Error occurred prerendering page "/documentation". Read more: https://nextjs.org/docs/messages/prerender-error
-2025-Dec-14 16:47:55.705812
-34.12 Error: useSidebar must be used within a SidebarProvider.
-2025-Dec-14 16:47:55.705812
-34.12     at B (.next/server/chunks/867.js:1:13830)
-2025-Dec-14 16:47:55.705812
-34.12     at <unknown> (.next/server/chunks/867.js:1:17356) {
-2025-Dec-14 16:47:55.705812
-34.12   digest: '3469081749'
-2025-Dec-14 16:47:55.705812
-34.12 }
-2025-Dec-14 16:47:55.705812
-34.12 Export encountered an error on /(main)/documentation/page: /documentation, exiting the build.
-2025-Dec-14 16:47:55.705812
-34.13  ⨯ Next.js build worker exited with code: 1 and signal: null
-2025-Dec-14 16:47:55.705812
-------
-2025-Dec-14 16:47:55.705812
-2025-Dec-14 16:47:55.705812
-2 warnings found (use docker --debug to expand):
-2025-Dec-14 16:47:55.705812
-- SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "GEMINI_API_KEY") (line 4)
-2025-Dec-14 16:47:55.705812
-- SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "GEMINI_API_KEY") (line 28)
-2025-Dec-14 16:47:55.705812
-Dockerfile:23
-2025-Dec-14 16:47:55.705812
---------------------
-2025-Dec-14 16:47:55.705812
-21 |     # Build the application
-2025-Dec-14 16:47:55.705812
-22 |     # Removing `|| true` to ensure the build fails if there are errors
-2025-Dec-14 16:47:55.705812
-23 | >>> RUN npm run build
-2025-Dec-14 16:47:55.705812
-24 |
-2025-Dec-14 16:47:55.705812
-25 |     # Runner Stage: Create the production image
-2025-Dec-14 16:47:55.705812
---------------------
-2025-Dec-14 16:47:55.705812
-ERROR: failed to build: failed to solve: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1
-2025-Dec-14 16:47:55.705812
-exit status 1
-2025-Dec-14 16:47:55.715915
-Deployment failed. Removing the new version of your application.
-2025-Dec-14 16:47:56.427763
-Gracefully shutting down build container: hgkowogwc8so44c0co8c4c4o
+2025-12-14T17:09:20.310755126Z 
+2025-12-14T17:09:20.310819206Z > nextn@0.1.0 start
+2025-12-14T17:09:20.310823206Z > next start
+2025-12-14T17:09:20.310825886Z 
+2025-12-14T17:09:20.680131786Z    ▲ Next.js 15.5.9
+2025-12-14T17:09:20.680861870Z    - Local:        http://localhost:3005
+2025-12-14T17:09:20.681239671Z    - Network:      http://10.0.2.31:3005
+2025-12-14T17:09:20.682003395Z 
+2025-12-14T17:09:20.682690638Z  ✓ Starting...
+2025-12-14T17:09:21.437690318Z  ✓ Ready in 970ms
+2025-12-14T17:12:36.288025721Z [Error: Body exceeded 1 MB limit.
+2025-12-14T17:12:36.288068281Z To configure the body size limit for Server Actions, see: https://nextjs.org/docs/app/api-reference/next-config-js/serverActions#bodysizelimit] {
+2025-12-14T17:12:36.288074921Z   statusCode: 413
+2025-12-14T17:12:36.288077961Z }
+2025-12-14T17:12:36.288838925Z  ⨯ uncaughtException:  [Error: Body exceeded 1 MB limit.
+2025-12-14T17:12:36.288859085Z To configure the body size limit for Server Actions, see: https://nextjs.org/docs/app/api-reference/next-config-js/serverActions#bodysizelimit] {
+2025-12-14T17:12:36.288867005Z   statusCode: 413
+2025-12-14T17:12:36.288869805Z }
+2025-12-14T17:12:36.291475820Z  ⨯ [Error: Body exceeded 1 MB limit.
+2025-12-14T17:12:36.291507700Z To configure the body size limit for Server Actions, see: https://nextjs.org/docs/app/api-reference/next-config-js/serverActions#bodysizelimit] {
+2025-12-14T17:12:36.291513620Z   statusCode: 413,
+2025-12-14T17:12:36.291516580Z   digest: '2424328199'
+2025-12-14T17:12:36.291519340Z }
+2025-12-14T17:13:46.194113564Z [Error: Body exceeded 1 MB limit.
+2025-12-14T17:13:46.194152244Z To configure the body size limit for Server Actions, see: https://nextjs.org/docs/app/api-reference/next-config-js/serverActions#bodysizelimit] {
+2025-12-14T17:13:46.194272605Z   statusCode: 413
+2025-12-14T17:13:46.194278525Z }
+2025-12-14T17:13:46.194904369Z  ⨯ uncaughtException:  [Error: Body exceeded 1 MB limit.
+2025-12-14T17:13:46.194955049Z To configure the body size limit for Server Actions, see: https://nextjs.org/docs/app/api-reference/next-config-js/serverActions#bodysizelimit] {
+2025-12-14T17:13:46.194961129Z   statusCode: 413
+2025-12-14T17:13:46.194964409Z }
+2025-12-14T17:13:46.196315016Z  ⨯ [Error: Body exceeded 1 MB limit.
+2025-12-14T17:13:46.196331737Z To configure the body size limit for Server Actions, see: https://nextjs.org/docs/app/api-reference/next-config-js/serverActions#bodysizelimit] {
+2025-12-14T17:13:46.196335497Z   statusCode: 413,
+2025-12-14T17:13:46.196339137Z   digest: '2424328199'
+2025-12-14T17:13:46.196341417Z }

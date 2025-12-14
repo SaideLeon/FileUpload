@@ -137,30 +137,6 @@ export async function getFilesByProjectName(apiKey: string, projectName: string)
   }
 }
 
-export async function uploadFile(apiKey: string, formData: FormData): Promise<{ success: string; error?: never; } | { error: string; success?: never; }> {
-  try {
-    const response = await fetch(`${API_URL}/api/upload`, {
-      method: 'POST',
-      headers: { 'Authorization': apiKey },
-      body: formData,
-    });
-
-    if (!response.ok) {
-      const errorJson = await response.json().catch(() => ({ error: `Upload failed with status: ${response.status}` }));
-      throw new Error(errorJson.error);
-    }
-
-    await response.json();
-    const fileName = formData.get('file') instanceof File ? (formData.get('file') as File).name : 'file';
-
-    return { success: `File "${fileName}" uploaded successfully.` };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error during upload.';
-    console.error('Upload error:', error);
-    return { error: message };
-  }
-}
-
 export async function deleteFile(apiKey: string, projectName: string, fileName: string): Promise<{ success: string; error?: never; } | { error: string; success?: never; }> {
     try {
         const response = await fetch(`${API_URL}/api/delete?project=${projectName}&file=${fileName}`, {
