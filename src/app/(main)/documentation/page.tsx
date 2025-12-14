@@ -558,8 +558,7 @@ def rotate_api_key(current_api_key):
     "Email": "user@example.com",
     "Password": "",
     "ForgeAPIKey": "1f98f668-179a-4a4e-9b54-3a8528a51784",
-    "CreatedAt": "2025-12-14T08:39:27.421Z",
-    "Projects": null
+    "CreatedAt": "2025-12-14T08:39:27.421Z"
   },
   "forge_api_key": "1f98f668-179a-4a4e-9b54-3a8528a51784"
 }`} />
@@ -590,7 +589,7 @@ def rotate_api_key(current_api_key):
         <section id="login" className="space-y-4">
           <h2 className="text-2xl font-semibold border-b pb-2">Login de Usuário</h2>
           <p>
-            Autentica um usuário e retorna um token JWT para ser usado em requisições subsequentes (não usado atualmente, prefira a API Key).
+            Autentica um usuário e retorna um token JWT e a `forge_api_key`.
           </p>
           <div className="flex items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold">POST</Badge>
@@ -629,7 +628,15 @@ def rotate_api_key(current_api_key):
             <h3 className="text-lg font-semibold mb-2">Resposta de Sucesso (200 OK)</h3>
             <CodeBlock language="json" code={`{
   "message": "Logged in successfully",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "ID": 2,
+    "Email": "user@example.com",
+    "Password": "",
+    "ForgeAPIKey": "0c6f4fd0-07a2-4045-bba5-83334ac95ab2",
+    "CreatedAt": "2025-12-14T08:39:27.421Z"
+  },
+  "forge_api_key": "0c6f4fd0-07a2-4045-bba5-83334ac95ab2"
 }`} />
           </div>
 
