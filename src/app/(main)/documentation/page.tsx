@@ -125,11 +125,19 @@ def list_files(project_name):
 # list_files('meu-projeto')`;
 
     // ===== LIST PROJECTS EXAMPLES =====
-    const listProjectsCurl = `curl "https://uploader.nativespeak.app/projects"`;
+    const listProjectsCurl = `curl -X 'GET' \\
+  'https://uploader.nativespeak.app/api/projects' \\
+  -H 'accept: application/json' \\
+  -H 'Authorization: SUA_FORGE_API_KEY'`;
 
-    const listProjectsJs = `const listProjects = async () => {
+    const listProjectsJs = `const listProjects = async (apiKey) => {
   try {
-    const response = await fetch('https://uploader.nativespeak.app/projects');
+    const response = await fetch('https://uploader.nativespeak.app/api/projects', {
+      headers: {
+        'Authorization': apiKey,
+        'Accept': 'application/json',
+      }
+    });
 
     if (!response.ok) {
       throw new Error('Falha ao listar projetos');
@@ -145,15 +153,19 @@ def list_files(project_name):
 };
 
 // Exemplo de uso
-// listProjects();`;
+// listProjects('SUA_FORGE_API_KEY');`;
 
     const listProjectsPython = `import requests
 
-def list_projects():
-    url = "https://uploader.nativespeak.app/projects"
+def list_projects(api_key):
+    url = "https://uploader.nativespeak.app/api/projects"
+    headers = {
+        'Authorization': api_key,
+        'Accept': 'application/json'
+    }
     
     try:
-        response = requests.get(url)
+        response = requests.get(url, headers=headers)
         response.raise_for_status()
         
         data = response.json()
@@ -167,7 +179,7 @@ def list_projects():
         return None
 
 # Exemplo de uso
-# list_projects()`;
+# list_projects('SUA_FORGE_API_KEY')`;
 
     // ===== DELETE FILE EXAMPLES =====
     const deleteFileCurl = `curl -X DELETE "https://uploader.nativespeak.app/delete?project=meu-projeto&file=arquivo-20240101-120000.jpg"`;
@@ -712,13 +724,31 @@ def rotate_api_key(current_api_key):
 
         {/* LIST PROJECTS ENDPOINT */}
         <section id="projects" className="space-y-4">
-          <h2 className="text-2xl font-semibold border-b pb-2">Listar Projetos</h2>
+          <h2 className="text-2xl font-semibold border-b pb-2">Listar Projetos (Autenticado)</h2>
           <p>
-            Retorna a lista de todos os projetos disponíveis publicamente com informações sobre quantidade de arquivos e tamanho total.
+            Retorna a lista de projetos associados à sua chave de API, com informações sobre quantidade de arquivos e tamanho total.
           </p>
           <div className="flex items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold">GET</Badge>
-            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/projects</code>
+            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/api/projects</code>
+          </div>
+          
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold">Headers</h3>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Header</TableHead>
+                  <TableHead>Descrição</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell><code className="font-mono">Authorization</code></TableCell>
+                  <TableCell>Sua `forge_api_key` obtida no registro.</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
 
           <div>
@@ -736,7 +766,10 @@ def rotate_api_key(current_api_key):
       "total_size": 1024000
     }
   ],
-  "total": 2
+  "total": 3,
+  "page": 1,
+  "per_page": 10,
+  "total_pages": 1
 }`} />
           </div>
 
@@ -1080,7 +1113,7 @@ fileInput.addEventListener('change', (e) => {
              <div className="p-4 bg-muted rounded-lg">
               <h4 className="font-semibold mb-2">🔑 Gerenciamento de Chaves</h4>
               <p className="text-sm text-muted-foreground">
-                Guarde sua `forge_api_key` de forma segura no lado do servidor. Use o endpoint de rotação periodicamente para maior segurança.
+                Guarde sua \`forge_api_key\` de forma segura no lado do servidor. Use o endpoint de rotação periodicamente para maior segurança.
               </p>
             </div>
 
@@ -1094,7 +1127,7 @@ fileInput.addEventListener('change', (e) => {
             <div className="p-4 bg-muted rounded-lg">
               <h4 className="font-semibold mb-2">🔒 Segurança</h4>
               <p className="text-sm text-muted-foreground">
-                Nomes de projetos são automaticamente sanitizados para segurança. Caracteres especiais como "..", "/", "\\" são removidos ou substituídos. Endpoints que não estão sob o prefixo `/api` são públicos por padrão.
+                Nomes de projetos são automaticamente sanitizados para segurança. Caracteres especiais como "..", "/", "\\" são removidos ou substituídos. Endpoints que não estão sob o prefixo \`/api\` são públicos por padrão.
               </p>
             </div>
 
