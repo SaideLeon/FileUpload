@@ -273,6 +273,72 @@ def register_user(email, password):
 # Exemplo de uso
 # register_user('user@example.com', 'yourstrongpassword')`;
 
+ // ===== LOGIN USER EXAMPLES =====
+    const loginUserCurl = `curl -X 'POST' \\
+  'https://uploader.nativespeak.app/login' \\
+  -H 'accept: application/json' \\
+  -H 'Content-Type: application/json' \\
+  -d '{
+  "email": "user@example.com",
+  "password": "yourpassword"
+}'`;
+
+    const loginUserJs = `const loginUser = async (email, password) => {
+  try {
+    const response = await fetch('https://uploader.nativespeak.app/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || 'Falha no login');
+    }
+
+    const result = await response.json();
+    console.log('Login bem-sucedido:', result);
+    // Salve o token para usar em requisições autenticadas
+    return result;
+  } catch (error) {
+    console.error('Erro no login:', error);
+    throw error;
+  }
+};`;
+
+    const loginUserPython = `import requests
+import json
+
+def login_user(email, password):
+    url = "https://uploader.nativespeak.app/login"
+    headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+    }
+    data = {
+        "email": email,
+        "password": password
+    }
+    
+    try:
+        response = requests.post(url, headers=headers, data=json.dumps(data))
+        response.raise_for_status()
+        
+        print("Sucesso:", response.json())
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Erro no login: {e}")
+        if e.response:
+            print("Detalhes:", e.response.text)
+        return None
+
+# Exemplo de uso
+# login_user('user@example.com', 'yourpassword')`;
+
+
   return (
     <>
       <AppHeader allProjects={[]} />
@@ -355,6 +421,74 @@ def register_user(email, password):
               </TabsContent>
               <TabsContent value="python">
                 <CodeBlock language="python" code={registerUserPython} />
+              </TabsContent>
+            </Tabs>
+          </div>
+        </section>
+
+        {/* LOGIN ENDPOINT */}
+        <section id="login" className="space-y-4">
+          <h2 className="text-2xl font-semibold border-b pb-2">Login de Usuário</h2>
+          <p>
+            Autentica um usuário e retorna um token JWT para ser usado em requisições subsequentes.
+          </p>
+          <div className="flex items-center gap-4">
+            <Badge variant="secondary" className="text-base font-semibold">POST</Badge>
+            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/login</code>
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold">Corpo da Requisição (JSON)</h3>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Campo</TableHead>
+                  <TableHead>Tipo</TableHead>
+                  <TableHead>Obrigatório</TableHead>
+                  <TableHead>Descrição</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell><code className="font-mono">email</code></TableCell>
+                  <TableCell>String</TableCell>
+                  <TableCell>Sim</TableCell>
+                  <TableCell>O e-mail do usuário.</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell><code className="font-mono">password</code></TableCell>
+                  <TableCell>String</TableCell>
+                  <TableCell>Sim</TableCell>
+                  <TableCell>A senha do usuário.</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Resposta de Sucesso (200 OK)</h3>
+            <CodeBlock language="json" code={`{
+  "message": "Logged in successfully",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}`} />
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Exemplos de Código</h3>
+            <Tabs defaultValue="curl" className="w-full">
+              <TabsList>
+                <TabsTrigger value="curl">cURL</TabsTrigger>
+                <TabsTrigger value="javascript">JavaScript</TabsTrigger>
+                <TabsTrigger value="python">Python</TabsTrigger>
+              </TabsList>
+              <TabsContent value="curl">
+                <CodeBlock language="bash" code={loginUserCurl} />
+              </TabsContent>
+              <TabsContent value="javascript">
+                <CodeBlock language="javascript" code={loginUserJs} />
+              </TabsContent>
+              <TabsContent value="python">
+                <CodeBlock language="python" code={loginUserPython} />
               </TabsContent>
             </Tabs>
           </div>
