@@ -16,7 +16,7 @@ import { LayoutGrid, List } from 'lucide-react';
 export default function ProjectPage() {
   const params = useParams();
   const { apiKey, isLoading: isAuthLoading } = useAuth();
-  const projectName = params.projectName as string;
+  const projectName = decodeURIComponent(params.projectName as string);
   const [project, setProject] = useState<Project | null>(null);
   const [files, setFiles] = useState<ProjectFile[]>([]);
   const [allProjects, setAllProjects] = useState<Project[]>([]);
