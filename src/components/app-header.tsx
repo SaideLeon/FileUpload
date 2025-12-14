@@ -76,7 +76,7 @@ export function AppHeader({ currentProject, allProjects }: AppHeaderProps) {
           )}
         </div>
       </div>
-      {user && <FileUploadDialog projectName={projectName} />}
+      {user && <FileUploadDialog projectName={projectName} allProjects={allProjects} />}
     </header>
   );
 }
