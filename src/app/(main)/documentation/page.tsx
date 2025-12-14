@@ -78,12 +78,20 @@ def upload_file(file_path, project_name, api_key):
 # upload_file('/caminho/para/seu/arquivo.jpg', 'meu-projeto', 'SUA_FORGE_API_KEY')`;
 
     // ===== LIST FILES EXAMPLES =====
-    const listFilesCurl = `curl "https://uploader.nativespeak.app/list?project=meu-projeto"`;
+    const listFilesCurl = `curl -X 'GET' \\
+  'https://uploader.nativespeak.app/api/list?project=meu-projeto' \\
+  -H 'accept: application/json' \\
+  -H 'Authorization: SUA_FORGE_API_KEY'`;
 
-    const listFilesJs = `const listFiles = async (projectName) => {
+    const listFilesJs = `const listFiles = async (projectName, apiKey) => {
   try {
     const response = await fetch(
-      \`https://uploader.nativespeak.app/list?project=\${projectName}\`
+      \`https://uploader.nativespeak.app/api/list?project=\${projectName}\`, {
+        headers: {
+          'Authorization': apiKey,
+          'Accept': 'application/json',
+        }
+      }
     );
 
     if (!response.ok) {
@@ -100,15 +108,22 @@ def upload_file(file_path, project_name, api_key):
 };
 
 // Exemplo de uso
-// listFiles('meu-projeto');`;
+// listFiles('meu-projeto', 'SUA_FORGE_API_KEY');`;
 
     const listFilesPython = `import requests
 
-def list_files(project_name):
-    url = f"https://uploader.nativespeak.app/list?project={project_name}"
+def list_files(project_name, api_key):
+    url = "https://uploader.nativespeak.app/api/list"
+    headers = {
+        'Authorization': api_key,
+        'Accept': 'application/json'
+    }
+    params = {
+        'project': project_name
+    }
     
     try:
-        response = requests.get(url)
+        response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
         
         data = response.json()
@@ -122,7 +137,7 @@ def list_files(project_name):
         return None
 
 # Exemplo de uso
-# list_files('meu-projeto')`;
+# list_files('meu-projeto', 'SUA_FORGE_API_KEY')`;
 
     // ===== LIST PROJECTS EXAMPLES =====
     const listProjectsCurl = `curl -X 'GET' \\
@@ -796,13 +811,31 @@ def rotate_api_key(current_api_key):
 
         {/* LIST FILES ENDPOINT */}
         <section id="list" className="space-y-4">
-          <h2 className="text-2xl font-semibold border-b pb-2">Listar Arquivos de um Projeto</h2>
+          <h2 className="text-2xl font-semibold border-b pb-2">Listar Arquivos de um Projeto (Autenticado)</h2>
           <p>
-            Lista todos os arquivos de um projeto específico publicamente com informações detalhadas.
+            Lista todos os arquivos de um projeto específico usando autenticação via API Key.
           </p>
           <div className="flex items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold">GET</Badge>
-            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/list?project={'{nome}'}</code>
+            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/api/list?project={'{nome}'}</code>
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold">Headers</h3>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Header</TableHead>
+                  <TableHead>Descrição</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell><code className="font-mono">Authorization</code></TableCell>
+                  <TableCell>Sua `forge_api_key` obtida no registro.</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
 
           <div className="space-y-2">
@@ -834,18 +867,21 @@ def rotate_api_key(current_api_key):
   "files": [
     {
       "name": "imagem-20240101-120000.jpg",
-      "url": "https://uploader.nativespeak.app/files/meu-projeto/imagem-20240101-120000.jpg",
+      "url": "https://uploader.nativespeak.app/files/user_2/meu-projeto/imagem-20240101-120000.jpg",
       "size": 204800,
-      "uploaded_at": "2024-01-01 12:00:00"
+      "uploaded_at": "2024-01-01T12:00:00Z"
     },
     {
       "name": "documento-20240101-120100.pdf",
-      "url": "https://uploader.nativespeak.app/files/meu-projeto/documento-20240101-120100.pdf",
+      "url": "https://uploader.nativespeak.app/files/user_2/meu-projeto/documento-20240101-120100.pdf",
       "size": 512000,
-      "uploaded_at": "2024-01-01 12:01:00"
+      "uploaded_at": "2024-01-01T12:01:00Z"
     }
   ],
-  "total": 2
+  "total": 2,
+  "page": 1,
+  "per_page": 10,
+  "total_pages": 1
 }`} />
           </div>
 
