@@ -196,6 +196,69 @@ def list_projects(api_key):
 # Exemplo de uso
 # list_projects('SUA_FORGE_API_KEY')`;
 
+    // ===== DELETE PROJECT EXAMPLES =====
+    const deleteProjectCurl = `curl -X 'DELETE' \\
+  'https://uploader.nativespeak.app/api/project/delete?project=meu-projeto' \\
+  -H 'accept: application/json' \\
+  -H 'Authorization: SUA_FORGE_API_KEY'`;
+
+    const deleteProjectJs = `const deleteProject = async (projectName, apiKey) => {
+  try {
+    const response = await fetch(
+      \`https://uploader.nativespeak.app/api/project/delete?project=\${projectName}\`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': apiKey,
+          'Accept': 'application/json',
+        }
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || 'Falha ao deletar projeto');
+    }
+
+    const result = await response.json();
+    console.log('Projeto deletado:', result);
+    return result;
+  } catch (error) {
+    console.error('Erro ao deletar projeto:', error);
+    throw error;
+  }
+};
+
+// Exemplo de uso
+// deleteProject('meu-projeto-a-deletar', 'SUA_FORGE_API_KEY');`;
+
+    const deleteProjectPython = `import requests
+
+def delete_project(project_name, api_key):
+    url = "https://uploader.nativespeak.app/api/project/delete"
+    headers = {
+        'Authorization': api_key,
+        'Accept': 'application/json'
+    }
+    params = {
+        'project': project_name
+    }
+    
+    try:
+        response = requests.delete(url, headers=headers, params=params)
+        response.raise_for_status()
+        
+        data = response.json()
+        print(f"Projeto deletado: {data.get('message', 'OK')}")
+        return data
+    except requests.exceptions.RequestException as e:
+        print(f"Erro ao deletar projeto: {e}")
+        if e.response:
+            print("Detalhes:", e.response.text)
+        return None
+
+# Exemplo de uso
+# delete_project('meu-projeto-a-deletar', 'SUA_FORGE_API_KEY')`;
+
     // ===== DELETE FILE EXAMPLES =====
     const deleteFileCurl = `curl -X DELETE "https://uploader.nativespeak.app/delete?project=meu-projeto&file=arquivo-20240101-120000.jpg"`;
 
@@ -809,6 +872,90 @@ def rotate_api_key(current_api_key):
           </div>
         </section>
 
+        {/* DELETE PROJECT ENDPOINT */}
+        <section id="delete-project" className="space-y-4">
+          <h2 className="text-2xl font-semibold border-b pb-2">Deletar Projeto (Autenticado)</h2>
+          <p>
+            Remove um projeto inteiro e todos os seus arquivos. Esta ação é irreversível. O projeto deve estar vazio antes de ser deletado.
+          </p>
+          <div className="flex items-center gap-4">
+            <Badge variant="secondary" className="text-base font-semibold bg-destructive text-destructive-foreground">DELETE</Badge>
+            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/api/project/delete?project={'{nome}'}</code>
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold">Headers</h3>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Header</TableHead>
+                  <TableHead>Descrição</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell><code className="font-mono">Authorization</code></TableCell>
+                  <TableCell>Sua `forge_api_key`.</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold">Parâmetros (Query)</h3>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Parâmetro</TableHead>
+                  <TableHead>Tipo</TableHead>
+                  <TableHead>Obrigatório</TableHead>
+                  <TableHead>Descrição</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell><code className="font-mono">project</code></TableCell>
+                  <TableCell>String</TableCell>
+                  <TableCell>Sim</TableCell>
+                  <TableCell>Nome do projeto a ser deletado.</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Resposta de Sucesso (200 OK)</h3>
+            <CodeBlock language="json" code={`{
+  "message": "Project deleted successfully"
+}`} />
+          </div>
+          
+           <div>
+            <h3 className="text-lg font-semibold mb-2">Resposta de Erro (400 Bad Request)</h3>
+            <CodeBlock language="text" code={`Project has files and cannot be deleted. Delete all files first.`} />
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Exemplos de Código</h3>
+            <Tabs defaultValue="curl" className="w-full">
+              <TabsList>
+                <TabsTrigger value="curl">cURL</TabsTrigger>
+                <TabsTrigger value="javascript">JavaScript</TabsTrigger>
+                <TabsTrigger value="python">Python</TabsTrigger>
+              </TabsList>
+              <TabsContent value="curl">
+                <CodeBlock language="bash" code={deleteProjectCurl} />
+              </TabsContent>
+              <TabsContent value="javascript">
+                <CodeBlock language="javascript" code={deleteProjectJs} />
+              </TabsContent>
+              <TabsContent value="python">
+                <CodeBlock language="python" code={deleteProjectPython} />
+              </TabsContent>
+            </Tabs>
+          </div>
+        </section>
+
         {/* LIST FILES ENDPOINT */}
         <section id="list" className="space-y-4">
           <h2 className="text-2xl font-semibold border-b pb-2">Listar Arquivos de um Projeto (Autenticado)</h2>
@@ -1193,3 +1340,5 @@ fileInput.addEventListener('change', (e) => {
     </>
   );
 }
+
+    
