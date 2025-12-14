@@ -834,17 +834,12 @@ def rotate_api_key(current_api_key):
             <CodeBlock language="json" code={`{
   "projects": [
     {
-      "name": "meu-projeto",
-      "file_count": 15,
-      "total_size": 2048576
-    },
-    {
-      "name": "outro-projeto",
-      "file_count": 8,
-      "total_size": 1024000
+      "name": "docph",
+      "file_count": 3,
+      "total_size": 7401702
     }
   ],
-  "total": 3,
+  "total": 1,
   "page": 1,
   "per_page": 10,
   "total_pages": 1
