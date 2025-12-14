@@ -42,30 +42,7 @@ OK
 
 Example Value
 Model
-{
-  "files": [
-    {
-      "name": "string",
-      "size": 0,
-      "uploaded_at": "string",
-      "url": "string"
-    }
-  ],
-  "page": 0,
-  "per_page": 0,
-  "project": "string",
-  "total": 0,
-  "total_pages": 0
-}
-400	
-Project name is required
 
-Example Value
-Model
-"string"
-404	
-Project not found
 
-Example Value
-Model
-"string"
+Project Not Found
+The project you are looking for does not exist or you do not have permission to view it.

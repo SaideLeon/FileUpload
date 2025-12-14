@@ -111,7 +111,7 @@ export async function getProjectByName(apiKey: string, name: string): Promise<Pr
 
 export async function getFilesByProjectName(apiKey: string, projectName: string): Promise<ProjectFile[]> {
   try {
-    const response = await fetch(`${API_URL}/api/list?project=${projectName}`, { 
+    const response = await fetch(`${API_URL}/api/list?project=${encodeURIComponent(projectName)}`, { 
         headers: { 'Authorization': apiKey },
         next: { revalidate: 0 } 
     });
@@ -139,7 +139,7 @@ export async function getFilesByProjectName(apiKey: string, projectName: string)
 
 export async function deleteFile(apiKey: string, projectName: string, fileName: string): Promise<{ success: string; error?: never; } | { error: string; success?: never; }> {
     try {
-        const response = await fetch(`${API_URL}/api/delete?project=${projectName}&file=${fileName}`, {
+        const response = await fetch(`${API_URL}/api/delete?project=${encodeURIComponent(projectName)}&file=${encodeURIComponent(fileName)}`, {
             method: 'DELETE',
             headers: { 'Authorization': apiKey }
         });
