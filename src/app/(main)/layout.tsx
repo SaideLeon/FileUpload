@@ -46,9 +46,11 @@ export default function MainLayout({
   // The documentation page has its own simplified header.
   if (!user && pathname === '/documentation') {
     return (
-       <div className="min-h-svh flex flex-col w-full">
-         {children}
-      </div>
+      <SidebarProvider>
+        <div className="min-h-svh flex flex-col w-full">
+          {children}
+        </div>
+      </SidebarProvider>
     )
   }
 
