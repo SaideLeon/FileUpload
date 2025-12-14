@@ -1,3 +1,5 @@
+'use client';
+
 import { CodeBlock } from '@/components/code-block';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -6,19 +8,26 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function DocumentationPage() {
     // ===== UPLOAD EXAMPLES =====
-    const uploadCurl = `curl -X POST "https://uploader.nativespeak.app/upload" \\
- -H "Content-Type: multipart/form-data" \\
- -F "project=meu-projeto-incrivel" \\
- -F "file=@/caminho/para/seu/arquivo.jpg"`;
+    const uploadCurl = `curl -X 'POST' \\
+  'https://uploader.nativespeak.app/api/upload' \\
+  -H 'accept: application/json' \\
+  -H 'Authorization: SUA_FORGE_API_KEY' \\
+  -H 'Content-Type: multipart/form-data' \\
+  -F 'project=meu-projeto' \\
+  -F 'file=@/caminho/para/seu/arquivo.jpg'`;
 
-    const uploadJs = `const uploadFile = async (file, projectName) => {
+    const uploadJs = `const uploadFile = async (file, projectName, apiKey) => {
   const formData = new FormData();
   formData.append('file', file);
   formData.append('project', projectName);
 
   try {
-    const response = await fetch('https://uploader.nativespeak.app/upload', {
+    const response = await fetch('https://uploader.nativespeak.app/api/upload', {
       method: 'POST',
+      headers: {
+        'Authorization': apiKey,
+        'Accept': 'application/json',
+      },
       body: formData,
     });
 
@@ -38,19 +47,23 @@ export default function DocumentationPage() {
 
     const uploadPython = `import requests
 
-def upload_file(file_path, project_name):
-    url = "https://uploader.nativespeak.app/upload"
+def upload_file(file_path, project_name, api_key):
+    url = "https://uploader.nativespeak.app/api/upload"
+    headers = {
+        'Authorization': api_key,
+        'Accept': 'application/json'
+    }
     
     with open(file_path, 'rb') as f:
         files = {
-            'file': (f.name, f, 'image/jpeg') 
+            'file': (f.name, f)
         }
         data = {
             'project': project_name
         }
         
         try:
-            response = requests.post(url, files=files, data=data)
+            response = requests.post(url, headers=headers, files=files, data=data)
             response.raise_for_status()
             
             print("Sucesso:", response.json())
@@ -62,7 +75,7 @@ def upload_file(file_path, project_name):
             return None
 
 # Exemplo de uso
-# upload_file('/caminho/para/seu/arquivo.jpg', 'meu-projeto-incrivel')`;
+# upload_file('/caminho/para/seu/arquivo.jpg', 'meu-projeto', 'SUA_FORGE_API_KEY')`;
 
     // ===== LIST FILES EXAMPLES =====
     const listFilesCurl = `curl "https://uploader.nativespeak.app/list?project=meu-projeto"`;
@@ -497,13 +510,31 @@ def login_user(email, password):
 
         {/* UPLOAD ENDPOINT */}
         <section id="upload" className="space-y-4">
-          <h2 className="text-2xl font-semibold border-b pb-2">Upload de Arquivo</h2>
+          <h2 className="text-2xl font-semibold border-b pb-2">Upload de Arquivo (Autenticado)</h2>
           <p>
-            Envia um arquivo para um projeto específico. Se o projeto não existir, ele será criado automaticamente.
+            Envia um arquivo para um projeto específico usando autenticação via API Key. Se o projeto não existir, ele será criado.
           </p>
           <div className="flex items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold">POST</Badge>
-            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/upload</code>
+            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/api/upload</code>
+          </div>
+          
+           <div className="space-y-2">
+            <h3 className="text-lg font-semibold">Headers</h3>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Header</TableHead>
+                  <TableHead>Descrição</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell><code className="font-mono">Authorization</code></TableCell>
+                  <TableCell>Sua `forge_api_key` obtida no registro.</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
 
           <div className="space-y-2">
@@ -521,8 +552,8 @@ def login_user(email, password):
                 <TableRow>
                   <TableCell><code className="font-mono">project</code></TableCell>
                   <TableCell>String</TableCell>
-                  <TableCell>Não</TableCell>
-                  <TableCell>Nome do projeto. Se não informado, usa "default".</TableCell>
+                  <TableCell>Sim</TableCell>
+                  <TableCell>Nome do projeto.</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell><code className="font-mono">file</code></TableCell>
@@ -535,12 +566,12 @@ def login_user(email, password):
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-2">Resposta de Sucesso (200 OK)</h3>
+            <h3 className="text-lg font-semibold mb-2">Resposta de Sucesso (201 Created)</h3>
             <CodeBlock language="json" code={`{
-  "message": "Arquivo enviado com sucesso",
-  "url": "https://uploader.nativespeak.app/files/meu-projeto/arquivo-20240101-120000.jpg",
-  "project": "meu-projeto",
-  "file": "arquivo-20240101-120000.jpg"
+  "message": "File uploaded successfully",
+  "url": "https://uploader.nativespeak.app/files/user_2/docph/guerra-20251214-100932.png",
+  "project": "docph",
+  "file": "guerra-20251214-100932.png"
 }`} />
           </div>
 
