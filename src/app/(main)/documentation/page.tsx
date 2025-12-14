@@ -351,6 +351,63 @@ def login_user(email, password):
 # Exemplo de uso
 # login_user('user@example.com', 'yourpassword')`;
 
+    // ===== ROTATE API KEY EXAMPLES =====
+    const rotateApiKeyCurl = `curl -X 'POST' \\
+  'https://uploader.nativespeak.app/api/user/rotate-api-key' \\
+  -H 'accept: application/json' \\
+  -H 'Authorization: SUA_ANTIGA_FORGE_API_KEY'`;
+
+    const rotateApiKeyJs = `const rotateApiKey = async (currentApiKey) => {
+  try {
+    const response = await fetch('https://uploader.nativespeak.app/api/user/rotate-api-key', {
+      method: 'POST',
+      headers: {
+        'Authorization': currentApiKey,
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Falha ao rotacionar a chave de API');
+    }
+
+    const result = await response.json();
+    console.log('Chave de API rotacionada com sucesso:', result);
+    // Salve a nova chave: result.new_api_key
+    return result;
+  } catch (error) {
+    console.error('Erro ao rotacionar a chave:', error);
+    throw error;
+  }
+};`;
+
+    const rotateApiKeyPython = `import requests
+
+def rotate_api_key(current_api_key):
+    url = "https://uploader.nativespeak.app/api/user/rotate-api-key"
+    headers = {
+        'Authorization': current_api_key,
+        'Accept': 'application/json'
+    }
+    
+    try:
+        response = requests.post(url, headers=headers)
+        response.raise_for_status()
+        
+        data = response.json()
+        print("Sucesso:", data)
+        # Salve a nova chave: data['new_api_key']
+        return data
+    except requests.exceptions.RequestException as e:
+        print(f"Erro ao rotacionar chave: {e}")
+        if e.response:
+            print("Detalhes:", e.response.text)
+        return None
+
+# Exemplo de uso
+# rotate_api_key('SUA_ANTIGA_FORGE_API_KEY')`;
+
 
   return (
     <>
@@ -443,7 +500,7 @@ def login_user(email, password):
         <section id="login" className="space-y-4">
           <h2 className="text-2xl font-semibold border-b pb-2">Login de Usuário</h2>
           <p>
-            Autentica um usuário e retorna um token JWT para ser usado em requisições subsequentes.
+            Autentica um usuário e retorna um token JWT para ser usado em requisições subsequentes (não usado atualmente, prefira a API Key).
           </p>
           <div className="flex items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold">POST</Badge>
@@ -507,6 +564,63 @@ def login_user(email, password):
           </div>
         </section>
 
+        {/* ROTATE API KEY ENDPOINT */}
+        <section id="rotate-key" className="space-y-4">
+          <h2 className="text-2xl font-semibold border-b pb-2">Rotacionar API Key (Autenticado)</h2>
+          <p>
+            Invalida a chave de API (`forge_api_key`) atual e gera uma nova. A chave antiga deixa de funcionar imediatamente.
+          </p>
+          <div className="flex items-center gap-4">
+            <Badge variant="secondary" className="text-base font-semibold">POST</Badge>
+            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/api/user/rotate-api-key</code>
+          </div>
+
+           <div className="space-y-2">
+            <h3 className="text-lg font-semibold">Headers</h3>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Header</TableHead>
+                  <TableHead>Descrição</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell><code className="font-mono">Authorization</code></TableCell>
+                  <TableCell>Sua `forge_api_key` atual que você deseja rotacionar.</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Resposta de Sucesso (200 OK)</h3>
+            <CodeBlock language="json" code={`{
+  "message": "API key rotated successfully",
+  "new_api_key": "0c6f4fd0-07a2-4045-bba5-83334ac95ab2"
+}`} />
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Exemplos de Código</h3>
+            <Tabs defaultValue="curl" className="w-full">
+              <TabsList>
+                <TabsTrigger value="curl">cURL</TabsTrigger>
+                <TabsTrigger value="javascript">JavaScript</TabsTrigger>
+                <TabsTrigger value="python">Python</TabsTrigger>
+              </TabsList>
+              <TabsContent value="curl">
+                <CodeBlock language="bash" code={rotateApiKeyCurl} />
+              </TabsContent>
+              <TabsContent value="javascript">
+                <CodeBlock language="javascript" code={rotateApiKeyJs} />
+              </TabsContent>
+              <TabsContent value="python">
+                <CodeBlock language="python" code={rotateApiKeyPython} />
+              </TabsContent>
+            </Tabs>
+          </div>
+        </section>
 
         {/* UPLOAD ENDPOINT */}
         <section id="upload" className="space-y-4">
@@ -531,7 +645,7 @@ def login_user(email, password):
               <TableBody>
                 <TableRow>
                   <TableCell><code className="font-mono">Authorization</code></TableCell>
-                  <TableCell>Sua `forge_api_key` obtida no registro.</TableCell>
+                  <TableCell>Sua `forge_api_key` obtida no registro ou na rotação.</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -600,7 +714,7 @@ def login_user(email, password):
         <section id="projects" className="space-y-4">
           <h2 className="text-2xl font-semibold border-b pb-2">Listar Projetos</h2>
           <p>
-            Retorna a lista de todos os projetos disponíveis com informações sobre quantidade de arquivos e tamanho total.
+            Retorna a lista de todos os projetos disponíveis publicamente com informações sobre quantidade de arquivos e tamanho total.
           </p>
           <div className="flex items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold">GET</Badge>
@@ -651,7 +765,7 @@ def login_user(email, password):
         <section id="list" className="space-y-4">
           <h2 className="text-2xl font-semibold border-b pb-2">Listar Arquivos de um Projeto</h2>
           <p>
-            Lista todos os arquivos de um projeto específico com informações detalhadas.
+            Lista todos os arquivos de um projeto específico publicamente com informações detalhadas.
           </p>
           <div className="flex items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold">GET</Badge>
@@ -725,9 +839,9 @@ def login_user(email, password):
 
         {/* DELETE FILE ENDPOINT */}
         <section id="delete" className="space-y-4">
-          <h2 className="text-2xl font-semibold border-b pb-2">Deletar Arquivo</h2>
+          <h2 className="text-2xl font-semibold border-b pb-2">Deletar Arquivo (Público)</h2>
           <p>
-            Remove um arquivo específico de um projeto.
+            Remove um arquivo específico de um projeto. Este endpoint é público e não requer autenticação.
           </p>
           <div className="flex items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold bg-destructive text-destructive-foreground">DELETE</Badge>
@@ -844,6 +958,16 @@ def login_user(email, password):
           </div>
 
           <div>
+            <h3 className="text-xl font-semibold mb-2">401 Unauthorized</h3>
+            <p className="text-sm text-muted-foreground mb-2">
+              Chave de API inválida ou ausente para endpoints autenticados.
+            </p>
+            <CodeBlock language="json" code={`{
+  "error": "Unauthorized"
+}`} />
+          </div>
+
+          <div>
             <h3 className="text-xl font-semibold mb-2">404 Not Found</h3>
             <p className="text-sm text-muted-foreground mb-2">
               Recurso não encontrado (projeto ou arquivo inexistente).
@@ -894,15 +1018,16 @@ createGallery('portfolio');`} />
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-2">2. Upload com Múltiplos Arquivos</h3>
-            <CodeBlock language="javascript" code={`const uploadMultipleFiles = async (files, projectName) => {
+            <h3 className="text-xl font-semibold mb-2">2. Upload com Múltiplos Arquivos (Autenticado)</h3>
+            <CodeBlock language="javascript" code={`const uploadMultipleFiles = async (files, projectName, apiKey) => {
   const uploadPromises = Array.from(files).map(file => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('project', projectName);
     
-    return fetch('https://uploader.nativespeak.app/upload', {
+    return fetch('https://uploader.nativespeak.app/api/upload', {
       method: 'POST',
+      headers: { 'Authorization': apiKey },
       body: formData
     }).then(res => res.json());
   });
@@ -920,7 +1045,7 @@ createGallery('portfolio');`} />
 // Usar com input file
 const fileInput = document.getElementById('fileInput');
 fileInput.addEventListener('change', (e) => {
-  uploadMultipleFiles(e.target.files, 'meu-projeto');
+  uploadMultipleFiles(e.target.files, 'meu-projeto', 'SUA_FORGE_API_KEY');
 });`} />
           </div>
 
@@ -952,6 +1077,13 @@ fileInput.addEventListener('change', (e) => {
           <h2 className="text-2xl font-semibold border-b pb-2">Melhores Práticas</h2>
           
           <div className="space-y-3">
+             <div className="p-4 bg-muted rounded-lg">
+              <h4 className="font-semibold mb-2">🔑 Gerenciamento de Chaves</h4>
+              <p className="text-sm text-muted-foreground">
+                Guarde sua `forge_api_key` de forma segura no lado do servidor. Use o endpoint de rotação periodicamente para maior segurança.
+              </p>
+            </div>
+
             <div className="p-4 bg-muted rounded-lg">
               <h4 className="font-semibold mb-2">📁 Organização por Projetos</h4>
               <p className="text-sm text-muted-foreground">
@@ -962,7 +1094,7 @@ fileInput.addEventListener('change', (e) => {
             <div className="p-4 bg-muted rounded-lg">
               <h4 className="font-semibold mb-2">🔒 Segurança</h4>
               <p className="text-sm text-muted-foreground">
-                Nomes de projetos são automaticamente sanitizados para segurança. Caracteres especiais como "..", "/", "\\" são removidos ou substituídos.
+                Nomes de projetos são automaticamente sanitizados para segurança. Caracteres especiais como "..", "/", "\\" são removidos ou substituídos. Endpoints que não estão sob o prefixo `/api` são públicos por padrão.
               </p>
             </div>
 
