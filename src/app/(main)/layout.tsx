@@ -31,7 +31,7 @@ export default function MainLayout({
 
   // The documentation page doesn't need an AppHeader from the layout, 
   // as it provides its own.
-  const shouldShowHeader = !pathname.startsWith('/projects/') && !pathname.startsWith('/documentation');
+  const shouldShowHeader = pathname === '/projects' || pathname === '/all-files';
   
   useEffect(() => {
     if (!apiKey) return;
