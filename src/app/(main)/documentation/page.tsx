@@ -208,6 +208,71 @@ def delete_file(project_name, file_name):
 # Exemplo de uso
 # delete_file('meu-projeto', 'arquivo-20240101-120000.jpg')`;
 
+    // ===== REGISTER USER EXAMPLES =====
+    const registerUserCurl = `curl -X 'POST' \\
+  'https://uploader.nativespeak.app/register' \\
+  -H 'accept: application/json' \\
+  -H 'Content-Type: application/json' \\
+  -d '{
+  "email": "user@example.com",
+  "password": "yourstrongpassword"
+}'`;
+
+    const registerUserJs = `const registerUser = async (email, password) => {
+  try {
+    const response = await fetch('https://uploader.nativespeak.app/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || 'Falha ao registrar usuário');
+    }
+
+    const result = await response.json();
+    console.log('Usuário registrado com sucesso:', result);
+    // Salve a forge_api_key para usar em outras requisições
+    return result;
+  } catch (error) {
+    console.error('Erro no registro:', error);
+    throw error;
+  }
+};`;
+
+    const registerUserPython = `import requests
+import json
+
+def register_user(email, password):
+    url = "https://uploader.nativespeak.app/register"
+    headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+    }
+    data = {
+        "email": email,
+        "password": password
+    }
+    
+    try:
+        response = requests.post(url, headers=headers, data=json.dumps(data))
+        response.raise_for_status()
+        
+        print("Sucesso:", response.json())
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Erro no registro: {e}")
+        if e.response:
+            print("Detalhes:", e.response.text)
+        return None
+
+# Exemplo de uso
+# register_user('user@example.com', 'yourstrongpassword')`;
+
   return (
     <>
       <AppHeader allProjects={[]} />
@@ -218,6 +283,83 @@ def delete_file(project_name, file_name):
             Guia completo para integrar e utilizar o serviço de upload de arquivos do File Forge.
           </p>
         </div>
+
+        {/* REGISTER ENDPOINT */}
+        <section id="register" className="space-y-4">
+          <h2 className="text-2xl font-semibold border-b pb-2">Registro de Usuário</h2>
+          <p>
+            Cria um novo usuário e retorna uma chave de API (`forge_api_key`) para autenticar requisições futuras.
+          </p>
+          <div className="flex items-center gap-4">
+            <Badge variant="secondary" className="text-base font-semibold">POST</Badge>
+            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/register</code>
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold">Corpo da Requisição (JSON)</h3>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Campo</TableHead>
+                  <TableHead>Tipo</TableHead>
+                  <TableHead>Obrigatório</TableHead>
+                  <TableHead>Descrição</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell><code className="font-mono">email</code></TableCell>
+                  <TableCell>String</TableCell>
+                  <TableCell>Sim</TableCell>
+                  <TableCell>O e-mail do novo usuário.</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell><code className="font-mono">password</code></TableCell>
+                  <TableCell>String</TableCell>
+                  <TableCell>Sim</TableCell>
+                  <TableCell>A senha do novo usuário.</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Resposta de Sucesso (201 Created)</h3>
+            <CodeBlock language="json" code={`{
+  "message": "User created successfully",
+  "user": {
+    "ID": 2,
+    "Email": "user@example.com",
+    "Password": "",
+    "ForgeAPIKey": "1f98f668-179a-4a4e-9b54-3a8528a51784",
+    "CreatedAt": "2025-12-14T08:39:27.421Z",
+    "Projects": null
+  },
+  "forge_api_key": "1f98f668-179a-4a4e-9b54-3a8528a51784"
+}`} />
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Exemplos de Código</h3>
+            <Tabs defaultValue="curl" className="w-full">
+              <TabsList>
+                <TabsTrigger value="curl">cURL</TabsTrigger>
+                <TabsTrigger value="javascript">JavaScript</TabsTrigger>
+                <TabsTrigger value="python">Python</TabsTrigger>
+              </TabsList>
+              <TabsContent value="curl">
+                <CodeBlock language="bash" code={registerUserCurl} />
+              </TabsContent>
+              <TabsContent value="javascript">
+                <CodeBlock language="javascript" code={registerUserJs} />
+              </TabsContent>
+              <TabsContent value="python">
+                <CodeBlock language="python" code={registerUserPython} />
+              </TabsContent>
+            </Tabs>
+          </div>
+        </section>
+
 
         {/* UPLOAD ENDPOINT */}
         <section id="upload" className="space-y-4">
@@ -231,7 +373,7 @@ def delete_file(project_name, file_name):
           </div>
 
           <div className="space-y-2">
-            <h3 className="text-lg font-semibold">Parâmetros</h3>
+            <h3 className="text-lg font-semibold">Parâmetros (multipart/form-data)</h3>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -352,7 +494,7 @@ def delete_file(project_name, file_name):
           </div>
 
           <div className="space-y-2">
-            <h3 className="text-lg font-semibold">Parâmetros</h3>
+            <h3 className="text-lg font-semibold">Parâmetros (Query)</h3>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -428,7 +570,7 @@ def delete_file(project_name, file_name):
           </div>
 
           <div className="space-y-2">
-            <h3 className="text-lg font-semibold">Parâmetros</h3>
+            <h3 className="text-lg font-semibold">Parâmetros (Query)</h3>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -655,7 +797,7 @@ fileInput.addEventListener('change', (e) => {
             <div className="p-4 bg-muted rounded-lg">
               <h4 className="font-semibold mb-2">🔒 Segurança</h4>
               <p className="text-sm text-muted-foreground">
-                Nomes de projetos são automaticamente sanitizados para segurança. Caracteres especiais como "..", "/", "\" são removidos ou substituídos.
+                Nomes de projetos são automaticamente sanitizados para segurança. Caracteres especiais como "..", "/", "\\" são removidos ou substituídos.
               </p>
             </div>
 
@@ -685,4 +827,3 @@ fileInput.addEventListener('change', (e) => {
     </>
   );
 }
-
