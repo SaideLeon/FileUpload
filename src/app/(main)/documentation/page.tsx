@@ -1340,5 +1340,3 @@ fileInput.addEventListener('change', (e) => {
     </>
   );
 }
-
-    
