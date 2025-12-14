@@ -1,0 +1,71 @@
+Curl
+
+curl -X 'GET' \
+  'https://uploader.nativespeak.app/api/list?project=projecto%20beta' \
+  -H 'accept: application/json' \
+  -H 'Authorization: 75d2e8ad-315b-48e1-9701-9a4ddb26ccd1'
+Request URL
+https://uploader.nativespeak.app/api/list?project=projecto%20beta
+Server response
+Code	Details
+200	
+Response body
+Download
+{
+  "project": "projecto beta",
+  "files": [
+    {
+      "name": "gelato_canvas_c22afd34-30cd-445f-a47d-eb37b1c2d6fa-20251214-172320.png",
+      "url": "https://uploader.nativespeak.app/files/user_2e1fae37-ea80-450a-ac50-77c8d14f406e/projecto beta/gelato_canvas_c22afd34-30cd-445f-a47d-eb37b1c2d6fa-20251214-172320.png",
+      "size": 1135118,
+      "uploaded_at": "2025-12-14T17:23:20.915244Z"
+    }
+  ],
+  "total": 1,
+  "page": 1,
+  "per_page": 10,
+  "total_pages": 1
+}
+Response headers
+ access-control-allow-headers: Accept,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token,Authorization 
+ access-control-allow-methods: POST,GET,OPTIONS,PUT,DELETE 
+ access-control-allow-origin: * 
+ alt-svc: h3=":443"; ma=2592000 
+ content-length: 402 
+ content-type: application/json 
+ date: Sun,14 Dec 2025 17:28:21 GMT 
+ vary: Accept-Encoding 
+Responses
+Code	Description
+200	
+OK
+
+Example Value
+Model
+{
+  "files": [
+    {
+      "name": "string",
+      "size": 0,
+      "uploaded_at": "string",
+      "url": "string"
+    }
+  ],
+  "page": 0,
+  "per_page": 0,
+  "project": "string",
+  "total": 0,
+  "total_pages": 0
+}
+400	
+Project name is required
+
+Example Value
+Model
+"string"
+404	
+Project not found
+
+Example Value
+Model
+"string"

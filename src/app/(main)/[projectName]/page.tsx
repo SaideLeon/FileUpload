@@ -9,6 +9,9 @@ import { getProjects } from '@/lib/api';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useParams } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { FilesGrid } from '@/components/files-grid';
+import { LayoutGrid, List } from 'lucide-react';
 
 export default function ProjectPage() {
   const params = useParams();
@@ -76,7 +79,20 @@ export default function ProjectPage() {
     <>
       <AppHeader currentProject={project} allProjects={allProjects} />
       <main className="flex-1 p-4 md:p-6 space-y-6 overflow-y-auto">
-        <FilesTable files={files} projectName={project.name} />
+        <Tabs defaultValue="grid">
+          <div className="flex justify-end mb-4">
+            <TabsList>
+              <TabsTrigger value="grid"><LayoutGrid className="w-4 h-4" /></TabsTrigger>
+              <TabsTrigger value="table"><List className="w-4 h-4" /></TabsTrigger>
+            </TabsList>
+          </div>
+          <TabsContent value="grid">
+            <FilesGrid files={files} projectName={project.name} />
+          </TabsContent>
+          <TabsContent value="table">
+            <FilesTable files={files} projectName={project.name} />
+          </TabsContent>
+        </Tabs>
       </main>
     </>
   );
