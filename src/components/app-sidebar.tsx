@@ -10,12 +10,14 @@ import {
   SidebarFooter
 } from '@/components/ui/sidebar';
 import type { ProjectWithDetails } from '@/lib/types';
-import { FolderGit2, Settings, Files, BookText } from 'lucide-react';
+import { FolderGit2, Files, BookText, LogOut, Home, KeyRound } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { Logo } from './logo';
 import { formatBytes } from '@/lib/utils';
 import { Badge } from './ui/badge';
+import { useAuth } from '@/context/auth-context';
+import { UserMenu } from './user-menu';
 
 interface AppSidebarProps {
   projects: ProjectWithDetails[];
@@ -24,18 +26,31 @@ interface AppSidebarProps {
 export function AppSidebar({ projects }: AppSidebarProps) {
   const params = useParams();
   const pathname = usePathname();
+  const { user } = useAuth();
   const currentProjectName = params.projectName as string;
+
+  if (!user) {
+    return null; // Or a login prompt
+  }
 
   return (
     <Sidebar variant="sidebar" collapsible="icon">
       <SidebarHeader>
-        <div className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center">
+        <Link href="/projects" className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center">
             <Logo />
             <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">File Forge</span>
-        </div>
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
+            <SidebarMenuItem>
+                 <SidebarMenuButton asChild isActive={pathname === '/projects'} tooltip={{ children: "Projetos" }}>
+                    <Link href="/projects">
+                        <Home />
+                        <span>Projetos</span>
+                    </Link>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
             <SidebarMenuItem>
                  <SidebarMenuButton asChild isActive={pathname === '/all-files'} tooltip={{ children: "Todos os Arquivos" }}>
                     <Link href="/all-files">
@@ -80,16 +95,7 @@ export function AppSidebar({ projects }: AppSidebarProps) {
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
-         <SidebarMenu>
-            <SidebarMenuItem>
-                 <SidebarMenuButton tooltip={{children: "Settings"}} asChild>
-                    <Link href="#">
-                        <Settings />
-                        <span className="group-data-[collapsible=icon]:hidden">Settings</span>
-                    </Link>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
-         </SidebarMenu>
+         <UserMenu />
       </SidebarFooter>
     </Sidebar>
   );

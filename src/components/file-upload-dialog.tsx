@@ -17,6 +17,7 @@ import { Upload } from 'lucide-react';
 import { useRef, useState, useActionState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { uploadFileAction } from '@/lib/actions';
+import { useAuth } from '@/context/auth-context';
 
 const initialState = {
   success: '',
@@ -31,7 +32,8 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
 
   const { toast } = useToast();
   const [state, formAction, isPending] = useActionState(uploadFileAction, initialState);
-
+  const { apiKey } = useAuth();
+  
   useEffect(() => {
     if (state.error) {
       toast({
@@ -81,7 +83,7 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
           <DialogHeader>
             <DialogTitle>Upload File</DialogTitle>
             <DialogDescription>
-              Select a file to upload to the project <span className="font-medium text-foreground">{projectName}</span>.
+              Select a file to upload. If you want to add it to a project, make sure you are on the project page. Otherwise, a default project will be used.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -102,7 +104,8 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
                 </p>
               )}
             </div>
-            <input type="hidden" name="project" value={projectName} />
+            <input type="hidden" name="project" value={projectName || 'default'} />
+             <input type="hidden" name="apiKey" value={apiKey || ''} />
           </div>
           <DialogFooter>
             <DialogClose asChild>
@@ -110,7 +113,7 @@ export function FileUploadDialog({ projectName }: { projectName: string }) {
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={isPending || !file}>
+            <Button type="submit" disabled={isPending || !file || !apiKey}>
               {isPending ? 'Uploading...' : 'Upload'}
             </Button>
           </DialogFooter>

@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import Link from "next/link";
-import { FolderGit2, Link as LinkIcon, Zap, Clock, BarChart, ShieldCheck, Star, Sparkles, Server } from "lucide-react";
+import { FolderGit2, Link as LinkIcon, Zap, Clock, BarChart, ShieldCheck } from "lucide-react";
 import { Logo } from "@/components/logo";
 
 export default function LandingPage() {
@@ -34,34 +34,38 @@ export default function LandingPage() {
     },
     {
       icon: <ShieldCheck className="h-8 w-8" />,
-      title: "Seguro e Isolado",
-      description: "Cada projeto é isolado dos outros. Nomes são sanitizados para máxima segurança.",
+      title: "Seguro e Autenticado",
+      description: "Cada conta de usuário é isolada e protegida por uma chave de API única (Forge API Key).",
     },
   ];
 
   const faqs = [
     {
       question: "Como funciona a organização por projetos?",
-      answer: "Cada upload pode ser associado a um projeto específico. Os arquivos são automaticamente organizados em diretórios separados, facilitando o gerenciamento.",
+      answer: "Cada upload que você faz usando sua API Key pode ser associado a um projeto. Se o projeto não existir, ele é criado automaticamente. Os arquivos são organizados em diretórios separados por usuário e por projeto.",
     },
     {
       question: "Posso usar em produção?",
-      answer: "Sim! O serviço está pronto para produção em https://uploader.nativespeak.app com SSL automático e alta disponibilidade.",
+      answer: "Sim! O serviço em https://uploader.nativespeak.app está pronto para produção, com SSL e alta disponibilidade.",
     },
     {
       question: "Que tipos de arquivo são suportados?",
       answer: "Todos! Imagens, vídeos, PDFs, documentos, áudio e qualquer outro tipo de arquivo. Sem restrições de formato.",
     },
     {
+      question: "Como eu consigo minha chave de API (Forge API Key)?",
+      answer: "É simples! Basta se registrar gratuitamente. Após o registro, sua chave será gerada e você poderá visualizá-la no seu painel. Você também pode fazer login a qualquer momento para recuperá-la.",
+    },
+     {
       question: "Como integro com minha aplicação?",
-      answer: "Use nossa API REST simples. Basta fazer um POST com o arquivo e o nome do projeto. Você receberá a URL pública instantaneamente. Veja a documentação para mais detalhes.",
+      answer: "Use nossa API REST. Basta fazer um POST para o endpoint de upload com o arquivo, o nome do projeto e sua chave de API no header de autorização. Veja a documentação para exemplos de código.",
     },
   ];
 
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background">
       <header className="px-4 lg:px-6 h-14 flex items-center fixed top-0 w-full bg-background/80 backdrop-blur-sm z-50 border-b border-border/50">
-        <Link href="#" className="flex items-center justify-center gap-2" prefetch={false}>
+        <Link href="/" className="flex items-center justify-center gap-2" prefetch={false}>
           <Logo />
           <span className="text-lg font-semibold text-primary">File Forge</span>
         </Link>
@@ -78,6 +82,9 @@ export default function LandingPage() {
           <Button asChild>
             <Link href="/projects">Começar Agora</Link>
           </Button>
+           <Button asChild variant="outline">
+            <Link href="/login">Login</Link>
+          </Button>
         </nav>
         <nav className="ml-auto lg:hidden">
            <Button asChild>
@@ -91,19 +98,18 @@ export default function LandingPage() {
           <div className="absolute top-0 left-0 w-full h-full bg-grid-slate-900/[0.04] dark:bg-grid-slate-100/[0.03] [mask-image:linear-gradient(to_bottom,white_5%,transparent_100%)]"></div>
           <div className="container space-y-10 xl:space-y-16 text-center pb-16 relative">
             <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm text-muted-foreground shadow-sm">
-              ✨ Organize seus arquivos por projetos
+              ✨ API de Upload para Desenvolvedores
             </div>
             <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
               Gerencie uploads <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Do Seu Jeito!</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Com Sua Própria API</span>
             </h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-              Upload inteligente com organização automática por projetos. Acesse seus arquivos de qualquer lugar com URLs
-              públicas estáveis.
+              Upload inteligente com organização automática por projetos. Registre-se, pegue sua API key e comece a usar.
             </p>
             <div className="flex items-center justify-center gap-4">
               <Button asChild size="lg">
-                <Link href="/projects">Começar Agora</Link>
+                <Link href="/register">Crie sua Conta Grátis</Link>
               </Button>
               <Button asChild size="lg" variant="outline">
                 <Link href="/documentation">Ver Documentação</Link>

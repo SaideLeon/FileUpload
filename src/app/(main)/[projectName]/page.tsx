@@ -8,9 +8,11 @@ import { AppHeader } from '@/components/app-header';
 import { getProjects } from '@/lib/api';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useParams } from 'next/navigation';
+import { useAuth } from '@/context/auth-context';
 
 export default function ProjectPage() {
   const params = useParams();
+  const { apiKey, isLoading: isAuthLoading } = useAuth();
   const projectName = params.projectName as string;
   const [project, setProject] = useState<Project | null>(null);
   const [files, setFiles] = useState<ProjectFile[]>([]);
@@ -18,14 +20,14 @@ export default function ProjectPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!projectName) return;
+    if (!projectName || !apiKey) return;
     async function fetchData() {
       setLoading(true);
       try {
         const [projectData, filesData, allProjectsData] = await Promise.all([
-          getProjectByName(projectName),
-          getFilesByProjectName(projectName),
-          getProjects(),
+          getProjectByName(apiKey, projectName),
+          getFilesByProjectName(apiKey, projectName),
+          getProjects(apiKey),
         ]);
         setProject(projectData);
         setFiles(filesData);
@@ -37,9 +39,11 @@ export default function ProjectPage() {
       }
     }
     fetchData();
-  }, [projectName]);
+  }, [projectName, apiKey]);
 
-  if (loading) {
+  const isLoading = loading || isAuthLoading;
+
+  if (isLoading) {
     return (
       <>
         <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-card px-4 sm:px-6">
@@ -61,7 +65,7 @@ export default function ProjectPage() {
             <div className="p-8 rounded-lg border bg-card text-card-foreground shadow-sm text-center max-w-md">
                 <h1 className="text-2xl font-bold mb-2">Project Not Found</h1>
                 <p className="text-muted-foreground mb-6">
-                    The project you are looking for does not exist.
+                    The project you are looking for does not exist or you do not have permission to view it.
                 </p>
             </div>
         </main>

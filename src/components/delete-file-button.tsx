@@ -16,6 +16,7 @@ import { Trash2 } from 'lucide-react';
 import { deleteFileAction } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
 import { useActionState, useEffect } from 'react';
+import { useAuth } from '@/context/auth-context';
 
 interface DeleteFileButtonProps {
   projectName: string;
@@ -30,6 +31,7 @@ const initialState = {
 export function DeleteFileButton({ projectName, fileName }: DeleteFileButtonProps) {
   const { toast } = useToast();
   const [state, formAction, isPending] = useActionState(deleteFileAction, initialState);
+  const { apiKey } = useAuth();
 
   useEffect(() => {
     if (state.success) {
@@ -47,9 +49,14 @@ export function DeleteFileButton({ projectName, fileName }: DeleteFileButtonProp
   }, [state, toast]);
 
   const handleDelete = () => {
+    if (!apiKey) {
+        toast({ variant: 'destructive', title: 'Error', description: 'API Key not found.' });
+        return;
+    }
     const formData = new FormData();
     formData.append('projectName', projectName);
     formData.append('fileName', fileName);
+    formData.append('apiKey', apiKey);
     formAction(formData);
   };
 
