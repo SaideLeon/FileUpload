@@ -667,15 +667,26 @@ def rotate_api_key(current_api_key):
             <h3 className="text-lg font-semibold mb-2">Resposta de Sucesso (200 OK)</h3>
             <CodeBlock language="json" code={`{
   "message": "Logged in successfully",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMDFiNGEyN2MtMDFhYi00YTA5LWE3MzYtMjUwNzQ2NTZiY2YwIiwiZW1haWwiOiJvbWFyQGdtYWlsLmNvbSIsImlzcyI6ImZvcmdlLXVwbG9hZGVyIiwiZXhwIjoxNzY1OTEyMjI4LCJpYXQiOjE3NjU4MjU4Mjh9.t4gabniMbn4kuEJUm6lBcijGCsxrEIDOO-wOs7UEVdQ",
   "user": {
-    "ID": 2,
-    "Email": "user@example.com",
-    "Password": "",
-    "ForgeAPIKey": "0c6f4fd0-07a2-4045-bba5-83334ac95ab2",
-    "CreatedAt": "2025-12-14T08:39:27.421Z"
+    "ID": "01b4a27c-01ab-4a09-a736-25074656bcf0",
+    "Name": "Saíde Omar Saíde",
+    "WhatsappNumber": "+258863304793",
+    "Email": "omar@gmail.com",
+    "ForgeAPIKey": "c86dbded-48ad-467d-bad0-834d62ae4e46",
+    "StorageUsage": 0,
+    "PlanID": "343a030e-8d01-443f-8faa-edebddbe6172",
+    "Plan": {
+      "ID": "343a030e-8d01-443f-8faa-edebddbe6172",
+      "Name": "Free",
+      "Price": 0,
+      "StorageLimit": 1073741824,
+      "CreatedAt": "2025-12-15T19:07:19.889Z"
+    },
+    "CreatedAt": "2025-12-15T19:09:35.311Z",
+    "Projects": []
   },
-  "forge_api_key": "0c6f4fd0-07a2-4045-bba5-83334ac95ab2"
+  "forge_api_key": "c86dbded-48ad-467d-bad0-834d62ae4e46"
 }`} />
           </div>
 
