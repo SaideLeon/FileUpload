@@ -23,14 +23,19 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { logoutAction } from '@/lib/actions';
 import { useAuth } from '@/context/auth-context';
-import { KeyRound, LogOut, Copy, Check } from 'lucide-react';
+import { KeyRound, LogOut, Copy, Check, Loader2 } from 'lucide-react'; // Added Loader2 for loading indicator
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 
+// Import the new API key rotation functions
+import { rotateApiKey } from '@/lib/api';
+import { updateApiKeyInSession } from '@/lib/session';
+
 export function UserMenu() {
-  const { user, apiKey } = useAuth();
+  const { user, apiKey, setApiKey } = useAuth(); // Destructure setApiKey
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
+  const [isRotatingKey, setIsRotatingKey] = useState(false); // New state for loading
 
   if (!user) return null;
 
@@ -55,6 +60,61 @@ export function UserMenu() {
     if (!key) return '';
     return `${key.substring(0, 4)}...${key.substring(key.length - 4)}`;
   }
+
+  const handleRotateApiKey = async () => {
+    if (!apiKey) {
+      toast({
+        title: 'Erro',
+        description: 'Nenhuma chave de API encontrada para girar.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setIsRotatingKey(true);
+    try {
+      const result = await rotateApiKey(apiKey);
+
+      if (result.success) {
+        const newKey = result.data?.new_api_key;
+        if (newKey) {
+          const sessionUpdated = await updateApiKeyInSession(newKey);
+          if (sessionUpdated) {
+            setApiKey(newKey); // Update the API key in AuthContext
+            toast({ title: 'API Key girada com sucesso!', description: 'Sua nova chave de API foi atualizada.' });
+          } else {
+            toast({
+              title: 'Erro',
+              description: 'API Key girada, mas falha ao atualizar a sessão. Por favor, faça login novamente.',
+              variant: 'destructive',
+            });
+            // Optionally force logout if session update fails critically
+            // await logoutAction();
+          }
+        } else {
+          toast({
+            title: 'Erro',
+            description: 'API Key girada, mas nenhuma nova chave foi retornada.',
+            variant: 'destructive',
+          });
+        }
+      } else {
+        toast({
+          title: 'Erro ao girar API Key',
+          description: result.error || 'Ocorreu um erro desconhecido.',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Erro',
+        description: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido ao girar a API Key.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsRotatingKey(false);
+    }
+  };
 
   return (
     <div className="flex w-full items-center gap-2 p-2">
@@ -102,6 +162,17 @@ export function UserMenu() {
               </div>
               <AlertDialogFooter>
                 <AlertDialogCancel>Fechar</AlertDialogCancel>
+                <Button
+                  onClick={handleRotateApiKey}
+                  disabled={isRotatingKey}
+                >
+                  {isRotatingKey ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <KeyRound className="mr-2 h-4 w-4" />
+                  )}
+                  <span>{isRotatingKey ? 'Girando...' : 'Girar API Key'}</span>
+                </Button>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

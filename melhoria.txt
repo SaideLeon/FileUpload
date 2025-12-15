@@ -1,66 +1,27 @@
-r of items per page
-
-per_page
-Execute
-Clear
-Responses
-Response content type
-
-application/json
 Curl
 
-curl -X 'GET' \
-  'https://uploader.nativespeak.app/api/projects' \
+curl -X 'POST' \
+  'https://uploader.nativespeak.app/api/user/rotate-api-key' \
   -H 'accept: application/json' \
-  -H 'Authorization: c86dbded-48ad-467d-bad0-834d62ae4e46'
+  -H 'Authorization: c86dbded-48ad-467d-bad0-834d62ae4e46' \
+  -d ''
 Request URL
-https://uploader.nativespeak.app/api/projects
+https://uploader.nativespeak.app/api/user/rotate-api-key
 Server response
 Code	Details
 200	
 Response body
 Download
 {
-  "projects": [
-    {
-      "name": "eleven",
-      "file_count": 1,
-      "total_size": 1135118
-    }
-  ],
-  "total": 1,
-  "page": 1,
-  "per_page": 10,
-  "total_pages": 1
+  "message": "API key rotated successfully",
+  "new_api_key": "411b52d9-a829-4edb-b60b-05f055d3281e"
 }
 Response headers
  access-control-allow-headers: Accept,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token,Authorization 
  access-control-allow-methods: POST,GET,OPTIONS,PUT,DELETE 
  access-control-allow-origin: * 
  alt-svc: h3=":443"; ma=2592000 
- content-length: 118 
+ content-length: 96 
  content-type: application/json 
- date: Mon,15 Dec 2025 19:20:45 GMT 
+ date: Mon,15 Dec 2025 19:47:50 GMT 
  vary: Accept-Encoding 
-Responses
-Code	Description
-200	
-OK
-
-Example Value
-Model
-{
-  "page": 0,
-  "per_page": 0,
-  "projects": [
-    {
-      "file_count": 0,
-      "name": "string",
-      "total_size": 0
-    }
-  ],
-  "total": 0,
-  "total_pages": 0
-}
-
-

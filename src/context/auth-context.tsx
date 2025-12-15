@@ -8,12 +8,14 @@ interface AuthContextType {
   user: User | null;
   apiKey: string | null;
   isLoading: boolean;
+  setApiKey: (key: string | null) => void; // Added setApiKey
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   apiKey: null,
   isLoading: true,
+  setApiKey: () => {}, // Default empty function
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -45,7 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, apiKey, isLoading }}>
+    <AuthContext.Provider value={{ user, apiKey, isLoading, setApiKey }}> {/* Passed setApiKey */}
       {children}
     </AuthContext.Provider>
   );
