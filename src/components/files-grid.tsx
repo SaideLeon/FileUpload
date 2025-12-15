@@ -5,10 +5,10 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { FileIcon } from './file-icon';
 import { formatBytes } from '@/lib/utils';
 import Image from 'next/image';
-import { DeleteFileButton } from './delete-file-button';
+import { CopyUrlButton } from './copy-url-button';
 import { FileViewerDialog } from './file-viewer-dialog';
-import { Button } from './ui/button';
-import { Eye, Trash2 } from 'lucide-react';
+import { DeleteFileButton } from './delete-file-button';
+import { Eye } from 'lucide-react';
 
 interface FilesGridProps {
   files: (ProjectFile & {projectName?: string})[];
@@ -54,7 +54,10 @@ export function FilesGrid({ files, projectName }: FilesGridProps) {
                 <p className="font-medium truncate w-full" title={file.name}>{file.name}</p>
                 <div className="w-full flex justify-between items-center text-muted-foreground text-xs">
                     <span>{formatBytes(file.size)}</span>
-                    <DeleteFileButton projectName={file.projectName || projectName} fileName={file.name} />
+                    <div className="flex items-center -mr-2">
+                      <CopyUrlButton url={file.url} />
+                      <DeleteFileButton projectName={projectName} fileName={file.name} />
+                    </div>
                 </div>
             </CardFooter>
         </Card>

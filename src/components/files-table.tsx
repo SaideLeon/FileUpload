@@ -13,9 +13,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatBytes } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { FileIcon } from './file-icon';
-import { DeleteFileButton } from './delete-file-button';
+import { CopyUrlButton } from './copy-url-button';
 import { FileViewerDialog } from './file-viewer-dialog';
 import { Button } from '@/components/ui/button';
+import { DeleteFileButton } from './delete-file-button';
 
 interface FilesTableProps {
   files: (ProjectFile & {projectName?: string})[];
@@ -63,6 +64,7 @@ export function FilesTable({ files, projectName, showProjectColumn = false }: Fi
           <TableBody>
             {files.map((file) => {
               const viewable = isFileViewable(file.type);
+              const project = file.projectName || projectName;
               return (
                 <TableRow key={file.id}>
                   <TableCell className="hidden sm:table-cell">
@@ -98,7 +100,10 @@ export function FilesTable({ files, projectName, showProjectColumn = false }: Fi
                     {formatDistanceToNow(new Date(file.uploadedAt), { addSuffix: true })}
                   </TableCell>
                   <TableCell className="text-right">
-                    <DeleteFileButton projectName={file.projectName || projectName || ''} fileName={file.name} />
+                    <div className="flex items-center justify-end">
+                      <CopyUrlButton url={file.url} />
+                      {project && <DeleteFileButton projectName={project} fileName={file.name} />}
+                    </div>
                   </TableCell>
                 </TableRow>
               );
