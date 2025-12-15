@@ -1,27 +1,23 @@
-Curl
-
-curl -X 'POST' \
-  'https://uploader.nativespeak.app/api/user/rotate-api-key' \
-  -H 'accept: application/json' \
-  -H 'Authorization: c86dbded-48ad-467d-bad0-834d62ae4e46' \
-  -d ''
-Request URL
-https://uploader.nativespeak.app/api/user/rotate-api-key
-Server response
-Code	Details
-200	
-Response body
-Download
 {
-  "message": "API key rotated successfully",
-  "new_api_key": "411b52d9-a829-4edb-b60b-05f055d3281e"
+  "message": "Logged in successfully",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMDFiNGEyN2MtMDFhYi00YTA5LWE3MzYtMjUwNzQ2NTZiY2YwIiwiZW1haWwiOiJvbWFyQGdtYWlsLmNvbSIsImlzcyI6ImZvcmdlLXVwbG9hZGVyIiwiZXhwIjoxNzY1OTEyMjI4LCJpYXQiOjE3NjU4MjU4Mjh9.t4gabniMbn4kuEJUm6lBcijGCsxrEIDOO-wOs7UEVdQ",
+  "user": {
+    "ID": "01b4a27c-01ab-4a09-a736-25074656bcf0",
+    "Name": "Saíde Omar Saíde",
+    "WhatsappNumber": "+258863304793",
+    "Email": "omar@gmail.com",
+    "Password": "",
+    "ForgeAPIKey": "c86dbded-48ad-467d-bad0-834d62ae4e46",
+    "StorageUsage": 0,
+    "PlanID": "343a030e-8d01-443f-8faa-edebddbe6172",
+    "Plan": {
+      "ID": "343a030e-8d01-443f-8faa-edebddbe6172",
+      "Name": "Free",
+      "Price": 0,
+      "StorageLimit": 1073741824,
+      "CreatedAt": "2025-12-15T19:07:19.889468Z"
+    },
+    "CreatedAt": "2025-12-15T19:09:35.3115Z" 
+  },
+  "forge_api_key": "c86dbded-48ad-467d-bad0-834d62ae4e46"
 }
-Response headers
- access-control-allow-headers: Accept,Content-Type,Content-Length,Accept-Encoding,X-CSRF-Token,Authorization 
- access-control-allow-methods: POST,GET,OPTIONS,PUT,DELETE 
- access-control-allow-origin: * 
- alt-svc: h3=":443"; ma=2592000 
- content-length: 96 
- content-type: application/json 
- date: Mon,15 Dec 2025 19:47:50 GMT 
- vary: Accept-Encoding 

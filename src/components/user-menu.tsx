@@ -23,19 +23,21 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { logoutAction } from '@/lib/actions';
 import { useAuth } from '@/context/auth-context';
-import { KeyRound, LogOut, Copy, Check, Loader2 } from 'lucide-react'; // Added Loader2 for loading indicator
+import { KeyRound, LogOut, Copy, Check, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
+import { Progress } from '@/components/ui/progress'; // Import Progress
+import { formatBytes } from '@/lib/utils'; // Import formatBytes
 
 // Import the new API key rotation functions
 import { rotateApiKey } from '@/lib/api';
 import { updateApiKeyInSession } from '@/lib/session';
 
 export function UserMenu() {
-  const { user, apiKey, setApiKey } = useAuth(); // Destructure setApiKey
+  const { user, apiKey, setApiKey } = useAuth();
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
-  const [isRotatingKey, setIsRotatingKey] = useState(false); // New state for loading
+  const [isRotatingKey, setIsRotatingKey] = useState(false);
 
   if (!user) return null;
 
@@ -80,7 +82,7 @@ export function UserMenu() {
         if (newKey) {
           const sessionUpdated = await updateApiKeyInSession(newKey);
           if (sessionUpdated) {
-            setApiKey(newKey); // Update the API key in AuthContext
+            setApiKey(newKey);
             toast({ title: 'API Key girada com sucesso!', description: 'Sua nova chave de API foi atualizada.' });
           } else {
             toast({
@@ -88,8 +90,6 @@ export function UserMenu() {
               description: 'API Key girada, mas falha ao atualizar a sessão. Por favor, faça login novamente.',
               variant: 'destructive',
             });
-            // Optionally force logout if session update fails critically
-            // await logoutAction();
           }
         } else {
           toast({
@@ -116,6 +116,10 @@ export function UserMenu() {
     }
   };
 
+  const storageUsed = user.StorageUsage;
+  const storageLimit = user.Plan.StorageLimit;
+  const storagePercentage = (storageUsed / storageLimit) * 100;
+
   return (
     <div className="flex w-full items-center gap-2 p-2">
       <DropdownMenu>
@@ -135,6 +139,15 @@ export function UserMenu() {
               </p>
             </div>
           </DropdownMenuLabel>
+
+          {/* Storage Information */}
+          <div className="px-2 py-1.5 text-sm">
+            <p className="text-muted-foreground">
+              {formatBytes(storageUsed)} de {formatBytes(storageLimit)} usado
+            </p>
+            <Progress value={storagePercentage} className="h-2 mt-1" />
+          </div>
+
           <DropdownMenuSeparator />
 
           {/* API Key Modal */}
