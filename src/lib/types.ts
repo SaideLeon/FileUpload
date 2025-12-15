@@ -60,17 +60,31 @@ export interface Plan {
   CreatedAt: string;
 }
 
+export interface UserProjectFile {
+  id: string;
+  mimeType: string;
+  name: string;
+}
+
+export interface UserProject {
+  id: string;
+  name: string;
+  createdAt: string;
+  files: UserProjectFile[];
+}
+
 export interface User {
   ID: string;
   Name: string;
   WhatsappNumber: string;
   Email: string;
+  Password?: string;
   ForgeAPIKey: string;
   StorageUsage: number;
   PlanID: string;
   Plan: Plan;
   CreatedAt: string;
-  Projects: any[]; // Define more strictly if needed
+  Projects: UserProject[];
 }
 
 export interface AuthResponse {
