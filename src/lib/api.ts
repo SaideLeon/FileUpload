@@ -43,11 +43,13 @@ export async function login(formData: FormData): Promise<ApiResult<AuthResponse>
 export async function register(formData: FormData): Promise<ApiResult<AuthResponse>> {
     const email = formData.get('email');
     const password = formData.get('password');
+    const name = formData.get('name');
+    const whatsapp_number = formData.get('whatsapp_number');
      try {
         const response = await fetch(`${API_URL}/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ email, password, name, whatsapp_number }),
         });
         return handleAuthResponse(response);
     } catch (error) {

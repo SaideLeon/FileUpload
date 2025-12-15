@@ -35,7 +35,7 @@ export default function RegisterPage() {
     }, [state, router, toast]);
 
     return (
-       <div className="flex items-center justify-center min-h-svh bg-background px-4">
+       <div className="flex items-center justify-center min-h-svh bg-background px-4 py-8">
             <Card className="mx-auto max-w-sm w-full">
                  <CardHeader className="text-center">
                     <div className="flex justify-center mb-4">
@@ -49,12 +49,30 @@ export default function RegisterPage() {
                 <CardContent>
                     <form action={formAction} className="grid gap-4">
                         <div className="grid gap-2">
+                            <Label htmlFor="name">Nome Completo</Label>
+                            <Input
+                                id="name"
+                                name="name"
+                                placeholder="Seu nome"
+                                required
+                            />
+                        </div>
+                        <div className="grid gap-2">
                             <Label htmlFor="email">Email</Label>
                             <Input
                                 id="email"
                                 type="email"
                                 name="email"
                                 placeholder="seu@email.com"
+                                required
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="whatsapp_number">Número do WhatsApp</Label>
+                            <Input
+                                id="whatsapp_number"
+                                name="whatsapp_number"
+                                placeholder="+123456789"
                                 required
                             />
                         </div>

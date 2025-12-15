@@ -52,18 +52,32 @@ export interface ListResponse {
   total_pages: number;
 }
 
+export interface Plan {
+  ID: string;
+  Name: string;
+  Price: number;
+  StorageLimit: number;
+  CreatedAt: string;
+}
+
 export interface User {
-  ID: number;
+  ID: string;
+  Name: string;
+  WhatsappNumber: string;
   Email: string;
   ForgeAPIKey: string;
+  StorageUsage: number;
+  PlanID: string;
+  Plan: Plan;
   CreatedAt: string;
+  Projects: any[]; // Define more strictly if needed
 }
 
 export interface AuthResponse {
   message: string;
   user: User;
   forge_api_key: string;
-  token: string;
+  token?: string; // Token is present on login but not on register
 }
 
 export interface ApiError {

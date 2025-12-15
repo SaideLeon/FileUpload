@@ -34,9 +34,13 @@ export function UserMenu() {
 
   if (!user) return null;
 
-  const getInitials = (email: string) => {
-    const parts = email.split('@');
-    return parts[0].charAt(0).toUpperCase();
+  const getInitials = (name: string) => {
+    if (!name) return '?';
+    const nameParts = name.split(' ');
+    if (nameParts.length > 1) {
+      return `${nameParts[0].charAt(0)}${nameParts[nameParts.length - 1].charAt(0)}`.toUpperCase();
+    }
+    return name.charAt(0).toUpperCase();
   };
 
   const handleCopyApiKey = () => {
@@ -58,14 +62,14 @@ export function UserMenu() {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-8 w-8">
-              <AvatarFallback>{getInitials(user.Email)}</AvatarFallback>
+              <AvatarFallback>{getInitials(user.Name)}</AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">Minha Conta</p>
+              <p className="text-sm font-medium leading-none truncate">{user.Name}</p>
               <p className="text-xs leading-none text-muted-foreground truncate">
                 {user.Email}
               </p>
@@ -115,7 +119,7 @@ export function UserMenu() {
         </DropdownMenuContent>
       </DropdownMenu>
       <div className="flex-1 group-data-[collapsible=icon]:hidden">
-        <p className="text-sm font-medium leading-none truncate">{user.Email}</p>
+        <p className="text-sm font-medium leading-none truncate">{user.Name}</p>
          <p className="text-xs leading-none text-muted-foreground truncate">API Key: {obscureApiKey(apiKey)}</p>
       </div>
     </div>

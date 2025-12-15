@@ -260,13 +260,21 @@ def delete_project(project_name, api_key):
 # delete_project('meu-projeto-a-deletar', 'SUA_FORGE_API_KEY')`;
 
     // ===== DELETE FILE EXAMPLES =====
-    const deleteFileCurl = `curl -X DELETE "https://uploader.nativespeak.app/delete?project=meu-projeto&file=arquivo-20240101-120000.jpg"`;
+    const deleteFileCurl = `curl -X 'DELETE' \\
+  'https://uploader.nativespeak.app/api/delete?project={nome}&file={arquivo}' \\
+  -H 'accept: application/json' \\
+  -H 'Authorization: SUA_FORGE_API_KEY'`;
 
-    const deleteFileJs = `const deleteFile = async (projectName, fileName) => {
+    const deleteFileJs = `const deleteFile = async (projectName, fileName, apiKey) => {
   try {
     const response = await fetch(
-      \`https://uploader.nativespeak.app/delete?project=\${projectName}&file=\${fileName}\`,
-      { method: 'DELETE' }
+      \`https://uploader.nativespeak.app/api/delete?project=\${projectName}&file=\${fileName}\`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': apiKey,
+          'Accept': 'application/json',
+        }
+      }
     );
 
     if (!response.ok) {
@@ -284,19 +292,23 @@ def delete_project(project_name, api_key):
 };
 
 // Exemplo de uso
-// deleteFile('meu-projeto', 'arquivo-20240101-120000.jpg');`;
+// deleteFile('meu-projeto', 'arquivo.jpg', 'SUA_FORGE_API_KEY');`;
 
     const deleteFilePython = `import requests
 
-def delete_file(project_name, file_name):
-    url = f"https://uploader.nativespeak.app/delete"
+def delete_file(project_name, file_name, api_key):
+    url = "https://uploader.nativespeak.app/api/delete"
     params = {
         'project': project_name,
         'file': file_name
     }
+    headers = {
+        'Authorization': api_key,
+        'Accept': 'application/json'
+    }
     
     try:
-        response = requests.delete(url, params=params)
+        response = requests.delete(url, headers=headers, params=params)
         response.raise_for_status()
         
         data = response.json()
@@ -309,7 +321,7 @@ def delete_file(project_name, file_name):
         return None
 
 # Exemplo de uso
-# delete_file('meu-projeto', 'arquivo-20240101-120000.jpg')`;
+# delete_file('meu-projeto', 'arquivo.jpg', 'SUA_FORGE_API_KEY')`;
 
     // ===== REGISTER USER EXAMPLES =====
     const registerUserCurl = `curl -X 'POST' \\
@@ -317,11 +329,13 @@ def delete_file(project_name, file_name):
   -H 'accept: application/json' \\
   -H 'Content-Type: application/json' \\
   -d '{
+  "name": "Seu Nome",
   "email": "user@example.com",
-  "password": "yourstrongpassword"
+  "password": "yourstrongpassword",
+  "whatsapp_number": "+123456789"
 }'`;
 
-    const registerUserJs = `const registerUser = async (email, password) => {
+    const registerUserJs = `const registerUser = async (name, email, password, whatsapp) => {
   try {
     const response = await fetch('https://uploader.nativespeak.app/register', {
       method: 'POST',
@@ -329,7 +343,7 @@ def delete_file(project_name, file_name):
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ name, email, password, whatsapp_number: whatsapp }),
     });
     
     if (!response.ok) {
@@ -350,15 +364,17 @@ def delete_file(project_name, file_name):
     const registerUserPython = `import requests
 import json
 
-def register_user(email, password):
+def register_user(name, email, password, whatsapp):
     url = "https://uploader.nativespeak.app/register"
     headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
     }
     data = {
+        "name": name,
         "email": email,
-        "password": password
+        "password": password,
+        "whatsapp_number": whatsapp
     }
     
     try:
@@ -374,7 +390,7 @@ def register_user(email, password):
         return None
 
 # Exemplo de uso
-# register_user('user@example.com', 'yourstrongpassword')`;
+# register_user('Seu Nome', 'user@example.com', 'yourstrongpassword', '+123456789')`;
 
  // ===== LOGIN USER EXAMPLES =====
     const loginUserCurl = `curl -X 'POST' \\
@@ -533,6 +549,12 @@ def rotate_api_key(current_api_key):
                 </TableRow>
               </TableHeader>
               <TableBody>
+                 <TableRow>
+                  <TableCell><code className="font-mono">name</code></TableCell>
+                  <TableCell>String</TableCell>
+                  <TableCell>Sim</TableCell>
+                  <TableCell>O nome completo do usuário.</TableCell>
+                </TableRow>
                 <TableRow>
                   <TableCell><code className="font-mono">email</code></TableCell>
                   <TableCell>String</TableCell>
@@ -545,6 +567,12 @@ def rotate_api_key(current_api_key):
                   <TableCell>Sim</TableCell>
                   <TableCell>A senha do novo usuário.</TableCell>
                 </TableRow>
+                 <TableRow>
+                  <TableCell><code className="font-mono">whatsapp_number</code></TableCell>
+                  <TableCell>String</TableCell>
+                  <TableCell>Sim</TableCell>
+                  <TableCell>Número de WhatsApp com código do país.</TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </div>
@@ -554,13 +582,24 @@ def rotate_api_key(current_api_key):
             <CodeBlock language="json" code={`{
   "message": "User created successfully",
   "user": {
-    "ID": 2,
-    "Email": "user@example.com",
-    "Password": "",
-    "ForgeAPIKey": "1f98f668-179a-4a4e-9b54-3a8528a51784",
-    "CreatedAt": "2025-12-14T08:39:27.421Z"
+    "ID": "b10dd751-cc5f-43c0-9a6a-9b31f0feefab",
+    "Name": "Saide Omar Saide",
+    "WhatsappNumber": "+258869041261",
+    "Email": "saideomar@gmail.com",
+    "ForgeAPIKey": "641787a8-6b18-4640-9b60-a09cc3b4f508",
+    "StorageUsage": 0,
+    "PlanID": "618f93b4-7a51-4ec9-afba-55dcaa65960c",
+    "Plan": {
+      "ID": "618f93b4-7a51-4ec9-afba-55dcaa65960c",
+      "Name": "Free",
+      "Price": 0,
+      "StorageLimit": 1073741824,
+      "CreatedAt": "2025-12-15T11:19:34.107Z"
+    },
+    "CreatedAt": "2025-12-15T11:22:25.858Z",
+    "Projects": []
   },
-  "forge_api_key": "1f98f668-179a-4a4e-9b54-3a8528a51784"
+  "forge_api_key": "641787a8-6b18-4640-9b60-a09cc3b4f508"
 }`} />
           </div>
 
@@ -1057,13 +1096,31 @@ def rotate_api_key(current_api_key):
 
         {/* DELETE FILE ENDPOINT */}
         <section id="delete" className="space-y-4">
-          <h2 className="text-2xl font-semibold border-b pb-2">Deletar Arquivo (Público)</h2>
+          <h2 className="text-2xl font-semibold border-b pb-2">Deletar Arquivo (Autenticado)</h2>
           <p>
-            Remove um arquivo específico de um projeto. Este endpoint é público e não requer autenticação.
+            Remove um arquivo específico de um projeto.
           </p>
           <div className="flex items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold bg-destructive text-destructive-foreground">DELETE</Badge>
-            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/delete?project={'{nome}'}&file={'{arquivo}'}</code>
+            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/api/delete?project={'{nome}'}&file={'{arquivo}'}</code>
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold">Headers</h3>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Header</TableHead>
+                  <TableHead>Descrição</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell><code className="font-mono">Authorization</code></TableCell>
+                  <TableCell>Sua `forge_api_key`.</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
 
           <div className="space-y-2">
@@ -1132,7 +1189,7 @@ def rotate_api_key(current_api_key):
           </p>
           <div className="flex items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold">GET</Badge>
-            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/files/{'{projeto}'}/{'{arquivo}'}</code>
+            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/files/{'{user_id}'}/{'{projeto}'}/{'{arquivo}'}</code>
           </div>
 
           <div>
@@ -1141,20 +1198,20 @@ def rotate_api_key(current_api_key):
               Você pode usar a URL diretamente em elementos HTML como imagens, vídeos ou links de download:
             </p>
             <CodeBlock language="html" code={`<!-- Exibir imagem -->
-<img src="https://uploader.nativespeak.app/files/meu-projeto/imagem-20240101-120000.jpg" alt="Imagem" />
+<img src="https://uploader.nativespeak.app/files/user_2/meu-projeto/imagem-20240101-120000.jpg" alt="Imagem" />
 
 <!-- Link para download -->
-<a href="https://uploader.nativespeak.app/files/meu-projeto/documento-20240101-120000.pdf" download>
+<a href="https://uploader.nativespeak.app/files/user_2/meu-projeto/documento-20240101-120000.pdf" download>
   Baixar Documento
 </a>
 
 <!-- Vídeo -->
-<video src="https://uploader.nativespeak.app/files/meu-projeto/video-20240101-120000.mp4" controls></video>`} />
+<video src="https://uploader.nativespeak.app/files/user_2/meu-projeto/video-20240101-120000.mp4" controls></video>`} />
           </div>
 
           <div>
             <h3 className="text-lg font-semibold mb-2">Download via cURL</h3>
-            <CodeBlock language="bash" code={`curl "https://uploader.nativespeak.app/files/meu-projeto/arquivo-20240101-120000.jpg" -o arquivo-local.jpg`} />
+            <CodeBlock language="bash" code={`curl "https://uploader.nativespeak.app/files/user_2/meu-projeto/arquivo-20240101-120000.jpg" -o arquivo-local.jpg`} />
           </div>
         </section>
 
@@ -1213,8 +1270,10 @@ def rotate_api_key(current_api_key):
           <div>
             <h3 className="text-xl font-semibold mb-2">1. Galeria de Imagens por Projeto</h3>
             <CodeBlock language="javascript" code={`// Criar galeria dinâmica
-const createGallery = async (projectName) => {
-  const response = await fetch(\`https://uploader.nativespeak.app/list?project=\${projectName}\`);
+const createGallery = async (projectName, apiKey) => {
+  const response = await fetch(\`https://uploader.nativespeak.app/api/list?project=\${projectName}\`, {
+    headers: { 'Authorization': apiKey }
+  });
   const data = await response.json();
   
   const gallery = document.getElementById('gallery');
@@ -1232,7 +1291,7 @@ const createGallery = async (projectName) => {
 };
 
 // Usar
-createGallery('portfolio');`} />
+createGallery('portfolio', 'SUA_FORGE_API_KEY');`} />
           </div>
 
           <div>
@@ -1269,8 +1328,10 @@ fileInput.addEventListener('change', (e) => {
 
           <div>
             <h3 className="text-xl font-semibold mb-2">3. Dashboard de Estatísticas</h3>
-            <CodeBlock language="javascript" code={`const getDashboardStats = async () => {
-  const response = await fetch('https://uploader.nativespeak.app/projects');
+            <CodeBlock language="javascript" code={`const getDashboardStats = async (apiKey) => {
+  const response = await fetch('https://uploader.nativespeak.app/api/projects', {
+     headers: { 'Authorization': apiKey }
+  });
   const data = await response.json();
   
   const stats = {
