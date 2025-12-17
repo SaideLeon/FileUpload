@@ -78,7 +78,7 @@ export default function ProjectPage() {
   return (
     <>
       <AppHeader currentProject={project} allProjects={allProjects} />
-      <main className="flex-1 p-4 md:p-6 space-y-6 overflow-y-auto">
+      <main className="flex-1 p-2 sm:p-4 md:p-6 space-y-6 overflow-y-auto">
         <Tabs defaultValue="grid">
           <div className="flex justify-end mb-4">
             <TabsList>

@@ -41,7 +41,7 @@ export default function ProjectsPage() {
 
   if (isLoading) {
     return (
-      <main className="flex-1 p-4 md:p-6 space-y-6 overflow-y-auto">
+      <main className="flex-1 p-2 sm:p-4 md:p-6 space-y-6 overflow-y-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[...Array(4)].map((_, i) => (
             <div key={i} className="flex flex-col gap-2">
@@ -72,7 +72,7 @@ export default function ProjectsPage() {
   }
 
   return (
-    <main className="flex-1 p-4 md:p-6 space-y-6 overflow-y-auto">
+    <main className="flex-1 p-2 sm:p-4 md:p-6 space-y-6 overflow-y-auto">
         <ProjectGrid projects={projects} filesPerProject={filesPerProject} />
     </main>
   );

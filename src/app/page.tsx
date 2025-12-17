@@ -1,11 +1,17 @@
 
+'use client'
+
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import Link from "next/link";
-import { FolderGit2, Link as LinkIcon, Zap, Clock, BarChart, ShieldCheck } from "lucide-react";
+import { FolderGit2, Link as LinkIcon, Zap, Clock, BarChart, ShieldCheck, Menu } from "lucide-react";
 import { Logo } from "@/components/logo";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useState } from "react";
 
 export default function LandingPage() {
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  
   const features = [
     {
       icon: <FolderGit2 className="h-8 w-8" />,
@@ -62,6 +68,8 @@ export default function LandingPage() {
     },
   ];
 
+  const closeSheet = () => setIsSheetOpen(false);
+
   return (
     <div className="flex flex-col min-h-[100dvh] bg-background">
       <header className="px-4 lg:px-6 h-14 flex items-center fixed top-0 w-full bg-background/80 backdrop-blur-sm z-50 border-b border-border/50">
@@ -87,16 +95,44 @@ export default function LandingPage() {
           </Button>
         </nav>
         <nav className="ml-auto lg:hidden">
-           <Button asChild>
-            <Link href="/projects">Acessar App</Link>
-          </Button>
+            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                <SheetTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                        <Menu className="h-6 w-6" />
+                        <span className="sr-only">Abrir menu</span>
+                    </Button>
+                </SheetTrigger>
+                <SheetContent side="right">
+                    <div className="p-6">
+                        <div className="flex flex-col gap-6 text-lg">
+                            <Link href="#features" onClick={closeSheet} className="font-medium text-foreground hover:text-primary" prefetch={false}>
+                                Recursos
+                            </Link>
+                            <Link href="#faq" onClick={closeSheet} className="font-medium text-foreground hover:text-primary" prefetch={false}>
+                                FAQ
+                            </Link>
+                            <Link href="/documentation" onClick={closeSheet} className="font-medium text-foreground hover:text-primary" prefetch={false}>
+                                Documentação
+                            </Link>
+                             <div className="flex flex-col gap-4 mt-6">
+                                <Button asChild size="lg" onClick={closeSheet}>
+                                    <Link href="/projects">Começar Agora</Link>
+                                </Button>
+                                <Button asChild size="lg" variant="outline" onClick={closeSheet}>
+                                    <Link href="/login">Login</Link>
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </SheetContent>
+            </Sheet>
         </nav>
       </header>
 
       <main className="flex-1">
         <section className="w-full pt-24 md:pt-32 lg:pt-40 border-b relative">
           <div className="absolute top-0 left-0 w-full h-full bg-grid-slate-900/[0.04] dark:bg-grid-slate-100/[0.03] [mask-image:linear-gradient(to_bottom,white_5%,transparent_100%)]"></div>
-          <div className="container space-y-10 xl:space-y-16 text-center pb-16 relative">
+          <div className="container space-y-10 xl:space-y-16 text-center pb-16 relative px-4 md:px-6">
             <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm text-muted-foreground shadow-sm">
               API de Upload para Desenvolvedores
             </div>
@@ -107,7 +143,7 @@ export default function LandingPage() {
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
               Upload inteligente com organização automática por projetos. Registre-se, pegue sua API key e comece a usar.
             </p>
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button asChild size="lg">
                 <Link href="/register">Crie sua Conta Grátis</Link>
               </Button>

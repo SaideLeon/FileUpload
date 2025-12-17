@@ -521,7 +521,7 @@ def rotate_api_key(current_api_key):
       <AppHeader allProjects={[]} />
       <main className="flex-1 p-4 md:p-6 lg:p-8 space-y-8 max-w-5xl mx-auto">
         <div className="space-y-4">
-          <h1 className="text-4xl font-bold tracking-tight text-primary">Documentação da API</h1>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-primary">Documentação da API</h1>
           <p className="text-lg text-muted-foreground">
             Guia completo para integrar e utilizar o serviço de upload de arquivos do File Forge.
           </p>
@@ -533,12 +533,12 @@ def rotate_api_key(current_api_key):
           <p>
             Cria um novo usuário e retorna uma chave de API (`forge_api_key`) para autenticar requisições futuras.
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold">POST</Badge>
-            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/register</code>
+            <code className="text-sm md:text-base font-mono p-2 bg-muted rounded-md break-all">https://uploader.nativespeak.app/register</code>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 overflow-x-auto">
             <h3 className="text-lg font-semibold">Corpo da Requisição (JSON)</h3>
             <Table>
               <TableHeader>
@@ -631,12 +631,12 @@ def rotate_api_key(current_api_key):
           <p>
             Autentica um usuário e retorna um token JWT e a `forge_api_key`.
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold">POST</Badge>
-            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/login</code>
+            <code className="text-sm md:text-base font-mono p-2 bg-muted rounded-md break-all">https://uploader.nativespeak.app/login</code>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 overflow-x-auto">
             <h3 className="text-lg font-semibold">Corpo da Requisição (JSON)</h3>
             <Table>
               <TableHeader>
@@ -718,12 +718,12 @@ def rotate_api_key(current_api_key):
           <p>
             Invalida a chave de API (`forge_api_key`) atual e gera uma nova. A chave antiga deixa de funcionar imediatamente.
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold">POST</Badge>
-            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/api/user/rotate-api-key</code>
+            <code className="text-sm md:text-base font-mono p-2 bg-muted rounded-md break-all">https://uploader.nativespeak.app/api/user/rotate-api-key</code>
           </div>
 
-           <div className="space-y-2">
+           <div className="space-y-2 overflow-x-auto">
             <h3 className="text-lg font-semibold">Headers</h3>
             <Table>
               <TableHeader>
@@ -776,12 +776,12 @@ def rotate_api_key(current_api_key):
           <p>
             Envia um arquivo para um projeto específico usando autenticação via API Key. Se o projeto não existir, ele será criado.
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold">POST</Badge>
-            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/api/upload</code>
+            <code className="text-sm md:text-base font-mono p-2 bg-muted rounded-md break-all">https://uploader.nativespeak.app/api/upload</code>
           </div>
           
-           <div className="space-y-2">
+           <div className="space-y-2 overflow-x-auto">
             <h3 className="text-lg font-semibold">Headers</h3>
             <Table>
               <TableHeader>
@@ -799,7 +799,7 @@ def rotate_api_key(current_api_key):
             </Table>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 overflow-x-auto">
             <h3 className="text-lg font-semibold">Parâmetros (multipart/form-data)</h3>
             <Table>
               <TableHeader>
@@ -864,12 +864,12 @@ def rotate_api_key(current_api_key):
           <p>
             Retorna a lista de projetos associados à sua chave de API, com informações sobre quantidade de arquivos e tamanho total.
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold">GET</Badge>
-            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/api/projects</code>
+            <code className="text-sm md:text-base font-mono p-2 bg-muted rounded-md break-all">https://uploader.nativespeak.app/api/projects</code>
           </div>
           
-          <div className="space-y-2">
+          <div className="space-y-2 overflow-x-auto">
             <h3 className="text-lg font-semibold">Headers</h3>
             <Table>
               <TableHeader>
@@ -931,12 +931,12 @@ def rotate_api_key(current_api_key):
           <p>
             Remove um projeto inteiro e todos os seus arquivos. Esta ação é irreversível. O projeto deve estar vazio antes de ser deletado.
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold bg-destructive text-destructive-foreground">DELETE</Badge>
-            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/api/project/delete?project={'{nome}'}</code>
+            <code className="text-sm md:text-base font-mono p-2 bg-muted rounded-md break-all">https://uploader.nativespeak.app/api/project/delete?project={'{nome}'}</code>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 overflow-x-auto">
             <h3 className="text-lg font-semibold">Headers</h3>
             <Table>
               <TableHeader>
@@ -954,7 +954,7 @@ def rotate_api_key(current_api_key):
             </Table>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 overflow-x-auto">
             <h3 className="text-lg font-semibold">Parâmetros (Query)</h3>
             <Table>
               <TableHeader>
@@ -1015,12 +1015,12 @@ def rotate_api_key(current_api_key):
           <p>
             Lista todos os arquivos de um projeto específico usando autenticação via API Key.
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold">GET</Badge>
-            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/api/list?project={'{nome}'}</code>
+            <code className="text-sm md:text-base font-mono p-2 bg-muted rounded-md break-all">https://uploader.nativespeak.app/api/list?project={'{nome}'}</code>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 overflow-x-auto">
             <h3 className="text-lg font-semibold">Headers</h3>
             <Table>
               <TableHeader>
@@ -1038,7 +1038,7 @@ def rotate_api_key(current_api_key):
             </Table>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 overflow-x-auto">
             <h3 className="text-lg font-semibold">Parâmetros (Query)</h3>
             <Table>
               <TableHeader>
@@ -1112,12 +1112,12 @@ def rotate_api_key(current_api_key):
           <p>
             Remove um arquivo específico de um projeto.
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold bg-destructive text-destructive-foreground">DELETE</Badge>
-            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/api/delete?project={'{nome}'}&file={'{arquivo}'}</code>
+            <code className="text-sm md:text-base font-mono p-2 bg-muted rounded-md break-all">https://uploader.nativespeak.app/api/delete?project={'{nome}'}&file={'{arquivo}'}</code>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 overflow-x-auto">
             <h3 className="text-lg font-semibold">Headers</h3>
             <Table>
               <TableHeader>
@@ -1135,7 +1135,7 @@ def rotate_api_key(current_api_key):
             </Table>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 overflow-x-auto">
             <h3 className="text-lg font-semibold">Parâmetros (Query)</h3>
             <Table>
               <TableHeader>
@@ -1199,9 +1199,9 @@ def rotate_api_key(current_api_key):
           <p>
             Acessa ou baixa um arquivo específico através de sua URL pública.
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <Badge variant="secondary" className="text-base font-semibold">GET</Badge>
-            <code className="text-base font-mono p-2 bg-muted rounded-md">https://uploader.nativespeak.app/files/{'{user_id}'}/{'{projeto}'}/{'{arquivo}'}</code>
+            <code className="text-sm md:text-base font-mono p-2 bg-muted rounded-md break-all">https://uploader.nativespeak.app/files/{'{user_id}'}/{'{projeto}'}/{'{arquivo}'}</code>
           </div>
 
           <div>
@@ -1369,7 +1369,7 @@ fileInput.addEventListener('change', (e) => {
           
           <div className="grid md:grid-cols-2 gap-4">
              <div className="p-4 bg-muted rounded-lg flex gap-4">
-              <KeyRound className="h-6 w-6 text-primary mt-1" />
+              <KeyRound className="h-6 w-6 text-primary mt-1 shrink-0" />
               <div>
                 <h4 className="font-semibold mb-1">Gerenciamento de Chaves</h4>
                 <p className="text-sm text-muted-foreground">
@@ -1379,7 +1379,7 @@ fileInput.addEventListener('change', (e) => {
             </div>
 
             <div className="p-4 bg-muted rounded-lg flex gap-4">
-              <FolderKanban className="h-6 w-6 text-primary mt-1" />
+              <FolderKanban className="h-6 w-6 text-primary mt-1 shrink-0" />
               <div>
                 <h4 className="font-semibold mb-1">Organização por Projetos</h4>
                 <p className="text-sm text-muted-foreground">
@@ -1389,7 +1389,7 @@ fileInput.addEventListener('change', (e) => {
             </div>
 
             <div className="p-4 bg-muted rounded-lg flex gap-4">
-              <ShieldCheck className="h-6 w-6 text-primary mt-1" />
+              <ShieldCheck className="h-6 w-6 text-primary mt-1 shrink-0" />
               <div>
                 <h4 className="font-semibold mb-1">Segurança</h4>
                 <p className="text-sm text-muted-foreground">
@@ -1399,7 +1399,7 @@ fileInput.addEventListener('change', (e) => {
             </div>
 
             <div className="p-4 bg-muted rounded-lg flex gap-4">
-              <Clock className="h-6 w-6 text-primary mt-1" />
+              <Clock className="h-6 w-6 text-primary mt-1 shrink-0" />
               <div>
                 <h4 className="font-semibold mb-1">Timestamps Automáticos</h4>
                 <p className="text-sm text-muted-foreground">
@@ -1409,7 +1409,7 @@ fileInput.addEventListener('change', (e) => {
             </div>
 
             <div className="p-4 bg-muted rounded-lg flex gap-4">
-              <Zap className="h-6 w-6 text-primary mt-1" />
+              <Zap className="h-6 w-6 text-primary mt-1 shrink-0" />
               <div>
                 <h4 className="font-semibold mb-1">Performance</h4>
                 <p className="text-sm text-muted-foreground">
@@ -1419,7 +1419,7 @@ fileInput.addEventListener('change', (e) => {
             </div>
 
             <div className="p-4 bg-muted rounded-lg flex gap-4">
-               <AreaChart className="h-6 w-6 text-primary mt-1" />
+               <AreaChart className="h-6 w-6 text-primary mt-1 shrink-0" />
                <div>
                 <h4 className="font-semibold mb-1">Monitoramento</h4>
                 <p className="text-sm text-muted-foreground">
