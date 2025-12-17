@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Upload } from 'lucide-react';
+import { PlusCircle, Upload } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useRef, useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
@@ -157,7 +157,12 @@ export function FileUploadDialog({ projectName, allProjects }: FileUploadDialogP
                   <SelectValue placeholder="Selecione um projeto" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="__new__">✨ Criar novo projeto</SelectItem>
+                  <SelectItem value="__new__">
+                    <span className="flex items-center">
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Criar novo projeto
+                    </span>
+                  </SelectItem>
                   {allProjects.map((p) => (
                     <SelectItem key={p.id} value={p.name}>
                       {p.name}

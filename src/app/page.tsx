@@ -98,7 +98,7 @@ export default function LandingPage() {
           <div className="absolute top-0 left-0 w-full h-full bg-grid-slate-900/[0.04] dark:bg-grid-slate-100/[0.03] [mask-image:linear-gradient(to_bottom,white_5%,transparent_100%)]"></div>
           <div className="container space-y-10 xl:space-y-16 text-center pb-16 relative">
             <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm text-muted-foreground shadow-sm">
-              ✨ API de Upload para Desenvolvedores
+              API de Upload para Desenvolvedores
             </div>
             <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
               Gerencie uploads <br/>

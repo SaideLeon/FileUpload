@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { AppHeader } from '@/components/app-header';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AreaChart, Clock, FolderKanban, KeyRound, ShieldCheck, Zap } from 'lucide-react';
 
 export default function DocumentationPage() {
     // ===== UPLOAD EXAMPLES =====
@@ -1366,47 +1367,65 @@ fileInput.addEventListener('change', (e) => {
         <section id="best-practices" className="space-y-4">
           <h2 className="text-2xl font-semibold border-b pb-2">Melhores Práticas</h2>
           
-          <div className="space-y-3">
-             <div className="p-4 bg-muted rounded-lg">
-              <h4 className="font-semibold mb-2">🔑 Gerenciamento de Chaves</h4>
-              <p className="text-sm text-muted-foreground">
-                Guarde sua \`forge_api_key\` de forma segura no lado do servidor. Use o endpoint de rotação periodicamente para maior segurança.
-              </p>
+          <div className="grid md:grid-cols-2 gap-4">
+             <div className="p-4 bg-muted rounded-lg flex gap-4">
+              <KeyRound className="h-6 w-6 text-primary mt-1" />
+              <div>
+                <h4 className="font-semibold mb-1">Gerenciamento de Chaves</h4>
+                <p className="text-sm text-muted-foreground">
+                  Guarde sua \`forge_api_key\` de forma segura no lado do servidor. Use o endpoint de rotação periodicamente para maior segurança.
+                </p>
+              </div>
             </div>
 
-            <div className="p-4 bg-muted rounded-lg">
-              <h4 className="font-semibold mb-2">📁 Organização por Projetos</h4>
-              <p className="text-sm text-muted-foreground">
-                Use nomes de projeto significativos que reflitam a estrutura do seu aplicativo. Exemplo: "user-avatars", "product-images", "documents-2024".
-              </p>
+            <div className="p-4 bg-muted rounded-lg flex gap-4">
+              <FolderKanban className="h-6 w-6 text-primary mt-1" />
+              <div>
+                <h4 className="font-semibold mb-1">Organização por Projetos</h4>
+                <p className="text-sm text-muted-foreground">
+                  Use nomes de projeto significativos que reflitam a estrutura do seu aplicativo. Exemplo: "user-avatars", "product-images", "documents-2024".
+                </p>
+              </div>
             </div>
 
-            <div className="p-4 bg-muted rounded-lg">
-              <h4 className="font-semibold mb-2">🔒 Segurança</h4>
-              <p className="text-sm text-muted-foreground">
-                Nomes de projetos são automaticamente sanitizados para segurança. Caracteres especiais como "..", "/", "\\" são removidos ou substituídos. Endpoints que não estão sob o prefixo \`/api\` são públicos por padrão.
-              </p>
+            <div className="p-4 bg-muted rounded-lg flex gap-4">
+              <ShieldCheck className="h-6 w-6 text-primary mt-1" />
+              <div>
+                <h4 className="font-semibold mb-1">Segurança</h4>
+                <p className="text-sm text-muted-foreground">
+                  Nomes de projetos são automaticamente sanitizados para segurança. Caracteres especiais como "..", "/", "\\" são removidos ou substituídos.
+                </p>
+              </div>
             </div>
 
-            <div className="p-4 bg-muted rounded-lg">
-              <h4 className="font-semibold mb-2">⏰ Timestamps Automáticos</h4>
-              <p className="text-sm text-muted-foreground">
-                Todos os arquivos recebem timestamps automáticos (formato: YYYYMMDD-HHMMSS) para evitar conflitos de nomes e facilitar a ordenação cronológica.
-              </p>
+            <div className="p-4 bg-muted rounded-lg flex gap-4">
+              <Clock className="h-6 w-6 text-primary mt-1" />
+              <div>
+                <h4 className="font-semibold mb-1">Timestamps Automáticos</h4>
+                <p className="text-sm text-muted-foreground">
+                  Todos os arquivos recebem timestamps automáticos (formato: YYYYMMDD-HHMMSS) para evitar conflitos de nomes e facilitar a ordenação cronológica.
+                </p>
+              </div>
             </div>
 
-            <div className="p-4 bg-muted rounded-lg">
-              <h4 className="font-semibold mb-2">🚀 Performance</h4>
-              <p className="text-sm text-muted-foreground">
-                Para uploads de múltiplos arquivos, use Promise.all() para enviar em paralelo e melhorar a performance.
-              </p>
+            <div className="p-4 bg-muted rounded-lg flex gap-4">
+              <Zap className="h-6 w-6 text-primary mt-1" />
+              <div>
+                <h4 className="font-semibold mb-1">Performance</h4>
+                <p className="text-sm text-muted-foreground">
+                  Para uploads de múltiplos arquivos, use Promise.all() para enviar em paralelo e melhorar a performance.
+                </p>
+              </div>
             </div>
 
-            <div className="p-4 bg-muted rounded-lg">
-              <h4 className="font-semibold mb-2">📊 Monitoramento</h4>
-              <p className="text-sm text-muted-foreground">
-                Use o endpoint /projects regularmente para monitorar o uso de espaço e quantidade de arquivos por projeto.
-              </p>
+            <div className="p-4 bg-muted rounded-lg flex gap-4">
+               <AreaChart className="h-6 w-6 text-primary mt-1" />
+               <div>
+                <h4 className="font-semibold mb-1">Monitoramento</h4>
+                <p className="text-sm text-muted-foreground">
+                  Use o endpoint /projects regularmente para monitorar o uso de espaço e quantidade de arquivos por projeto.
+                </p>
+              </div>
             </div>
           </div>
         </section>
