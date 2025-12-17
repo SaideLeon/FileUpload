@@ -88,7 +88,7 @@ export default function LandingPage() {
             Documentação
           </Link>
           <Button asChild>
-            <Link href="/projects">Começar Agora</Link>
+            <Link href="/register">Começar Agora</Link>
           </Button>
            <Button asChild variant="outline">
             <Link href="/login">Login</Link>
@@ -116,7 +116,7 @@ export default function LandingPage() {
                             </Link>
                              <div className="flex flex-col gap-4 mt-6">
                                 <Button asChild size="lg" onClick={closeSheet}>
-                                    <Link href="/projects">Começar Agora</Link>
+                                    <Link href="/register">Começar Agora</Link>
                                 </Button>
                                 <Button asChild size="lg" variant="outline" onClick={closeSheet}>
                                     <Link href="/login">Login</Link>

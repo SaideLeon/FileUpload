@@ -66,11 +66,13 @@ export default function MainLayout({
 
   return (
     <SidebarProvider>
+      <div className="flex w-full">
         <AppSidebar projects={projects} />
-        <div className="md:pe-2 min-h-svh flex flex-col w-full">
+        <main className="flex-1 flex flex-col min-h-svh w-full">
             {shouldShowHeader && <AppHeader allProjects={projects} />}
             {children}
-        </div>
+        </main>
+      </div>
     </SidebarProvider>
   );
 }
