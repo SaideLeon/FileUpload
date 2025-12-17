@@ -1,24 +1,22 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { getSession } from './lib/session';
  
-// This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const session = await getSession();
 
   const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/register');
+  const isPublicPage = isAuthPage || pathname === '/' || pathname === '/documentation';
 
-  if (isAuthPage) {
-    if (session) {
-      return NextResponse.redirect(new URL('/projects', request.url));
-    }
-    return NextResponse.next();
+  // If the user is logged in and trying to access an auth page or landing page,
+  // redirect them to their projects.
+  if (session && (isAuthPage || pathname === '/')) {
+    return NextResponse.redirect(new URL('/projects', request.url));
   }
 
-  if (!session) {
-    if (pathname === '/documentation') {
-      return NextResponse.next();
-    }
+  // If the user is not logged in and trying to access a protected page,
+  // redirect them to login.
+  if (!session && !isPublicPage) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
  

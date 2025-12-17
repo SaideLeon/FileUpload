@@ -19,15 +19,12 @@ export default function MainLayout({
   const router = useRouter();
   const { user, apiKey, isLoading } = useAuth();
 
-  // Redirect to login if not authenticated and not on a public page
+  // Redirect to login if not authenticated
   useEffect(() => {
     if (!isLoading && !user) {
-      // Allow access to documentation without being logged in
-      if (pathname !== '/documentation') {
-         router.push('/login');
-      }
+      router.push('/login');
     }
-  }, [isLoading, user, pathname, router]);
+  }, [isLoading, user, router]);
 
   // The documentation page doesn't need an AppHeader from the layout, 
   // as it provides its own.
@@ -41,20 +38,8 @@ export default function MainLayout({
     }
     fetchProjects();
   }, [apiKey]);
-  
-  // Don't render layout for documentation if user is not logged in.
-  // The documentation page has its own simplified header.
-  if (!user && pathname === '/documentation') {
-    return (
-      <SidebarProvider>
-        <div className="min-h-svh flex flex-col w-full">
-          {children}
-        </div>
-      </SidebarProvider>
-    )
-  }
 
-  if (isLoading) {
+  if (isLoading || !user) {
     return (
       <div className="flex items-center justify-center min-h-svh w-full">
         <div className="p-8 rounded-lg text-center max-w-md">
