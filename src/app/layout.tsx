@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'File Forge Admin',
   description: 'Manage your project files with ease.',
   icons: {
-    icon: '/image.png',
+    icon: '/assets/image.png',
   },
 };
 
