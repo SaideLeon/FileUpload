@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'File Forge Admin',
   description: 'Manage your project files with ease.',
   icons: {
-    icon: '/assets/image.png',
+    icon: 'https://uploader.nativespeak.app/files/user_a411945e-ad0c-443c-b568-e8005c55bb31/fileforge/icon-20260106-082419.png',
   },
 };
 
