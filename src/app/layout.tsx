@@ -6,6 +6,9 @@ import { AuthProvider } from '@/context/auth-context';
 export const metadata: Metadata = {
   title: 'File Forge Admin',
   description: 'Manage your project files with ease.',
+  icons: {
+    icon: '/image.png',
+  },
 };
 
 export default function RootLayout({
